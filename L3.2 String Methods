@@ -1,0 +1,37 @@
+public class NameInfo {
+
+    public static void main(String[] args) {
+        
+        //First define my name to a variable
+        String myName = "James Beagin";
+        //Concatenate name with the sentence before it
+        System.out.println("My name is \""+myName+"\".");
+        //This prints the sentence plus the length method for the myName String object
+        System.out.println("The length of my name, including spaces, is "+myName.length()+".");
+        //This printline uses the toUpperCase method to change the string
+        System.out.println("My name reformatted to caps is \""+myName.toUpperCase()+"\".");
+        //Similarly to the last one, this uses the toLowerCase method
+        System.out.println("My name reformatted to all lowercase is \""+myName.toLowerCase()+"\".");
+        //This line gets the first character of the myName string
+        System.out.println("The first letter of my name is \""+myName.charAt(0)+"\".");
+        //Uses myName.length()-1 to find the character at the very end of the string
+        System.out.println("The final letter of my name is \""+myName.charAt(myName.length()-1)+"\".");
+        //This one searches for the space character by using the 
+        System.out.println("The space between my first and last name appears at index number "+myName.indexOf(" ")+".");
+        
+        /*
+        
+        Code output:
+        
+        My name is "James Beagin".
+        The length of my name, including spaces, is 12.
+        My name reformatted to caps is "JAMES BEAGIN".
+        My name reformatted to all lowercase is "james beagin".
+        The first letter of my name is "J".
+        The final letter of my name is "n".
+        The space between my first and last name appears at index number 5.
+        
+        */
+        
+    }
+}
