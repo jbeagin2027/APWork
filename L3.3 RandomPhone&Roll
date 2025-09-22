@@ -1,0 +1,116 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.randomoutputs;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+import java.math.*;
+
+
+/*
+
+The structure of the program will be a while loop
+It will have an exit case, a new phone number case, and a die case
+The program will determine the case by prompting the user after giving output
+On the first pass it will skip attempting to output.
+
+*/
+
+public class RandomOutputs {
+
+    public static void main(String[] args) {
+        
+        //declares various variables used in the program
+        //bools control whether the program quits and whether it ourputs
+        boolean loopAgain = true, initialized = false;
+        //integer forms of the phone number groupings
+        int secondTriplet = 0, quadruplet = 0;
+        //String forms of the phone number groupings
+        String secondPart = "", thirdPart = "";
+        //Declares the user input variablr for later use
+        String userInput = "";
+        
+        //sets up the scanner and the randum number generator under "scan" and "rand"
+        Scanner scan  = new Scanner(System.in);
+        Random rand = new Random();
+        
+        //Loop runs during the first pass and subsequent passes that user doesnt input q
+        while(loopAgain){
+            
+            //Loop output, only runs if program is initialized
+            if(initialized){
+                
+                //Generate a random phone number if the user inputted p
+                if(userInput.equals("p")){
+                    
+                    //generates two random integer to be used for the phone number
+                    secondTriplet = rand.nextInt(656);
+                    quadruplet = rand.nextInt(10000);
+                    
+                    //Converts the integers to string, import for formatting
+                    secondPart = String.valueOf(secondTriplet);
+                    thirdPart = String.valueOf(quadruplet);
+                    
+                    //With a raw integer value, the phone number could have form ###-##-## or somthing else messed up
+                    //This code lengthens the string by adding extra zeroes to fix how the string looks
+                    for(int j=0; j<4; j++){
+                        if(secondPart.length() < 3){
+                            secondPart = "0"+secondPart;
+                        }
+                        if(thirdPart.length() < 4){
+                            thirdPart = "0"+thirdPart;
+                        }
+                    }
+                    
+                    //This outputs the first three numbers as separate random numbers
+                    //The second and third groups are taken from the above code, sometimes with extra starting zeroes
+                    System.out.println("Random phone number generated: "+rand.nextInt(8)+rand.nextInt(8)+rand.nextInt(8)
+                            +"-"+secondPart
+                            +"-"+thirdPart);
+                    
+                //Generate a random dice roll if the user inputted r
+                }else if(userInput.equals("r")){
+                    
+                    System.out.println("Random dice roll: "+(rand.nextInt(6)+1));
+                    
+                //Tell the user that their input didnt work if not one of the characters
+                }else{
+                    
+                    System.out.println("Input not recognized, try again");
+                    
+                }
+                
+            }
+            
+            //Makes new space so it looks nicer
+            System.out.println();
+            
+            //Inform the user of the control options
+            System.out.println(""
+                    + "Input p for new phone number \n"
+                    + "Input r for new dice roll \n"
+                    + "Input q to quit the program ");
+            
+            //recieve user input
+            userInput = scan.nextLine();
+            
+            //Checks if the user wants to quit the program
+            if(userInput.equals("q")){
+                loopAgain = false;
+            }else{
+                loopAgain = true;
+            }
+            //Set initialized to true so that the next loop outputs
+            initialized = true;
+            
+        }
+        
+    }
+    
+}
