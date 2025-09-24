@@ -1,0 +1,127 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.mathematicalrandoms;
+
+import java.util.*;
+import java.math.*;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+public class MathematicalRandoms {
+
+    public static void main(String[] args) {
+        
+        //I copied the code i used last assignment for this, the loop structure
+        //declares various variables used in the program
+        //bools control whether the program quits and whether it ourputs
+        boolean loopAgain = true, initialized = false;
+        
+        //Declares the random balues that will be used during calculations
+        long randomInteger = 0;
+        double randomFloat = 0.0;
+        
+        long decimalPlaces, exponent = 0;
+        double baseValue = 0.0;
+        
+        //Declares the user input variable for later use
+        String userInput = "";
+        
+        //sets up the scanner and the randum number generator under "scan" and "rand"
+        Scanner scan  = new Scanner(System.in);
+        Random rand = new Random();
+        
+        //Loop runs during the first pass and subsequent passes that user doesnt input q
+        while(loopAgain){
+            
+            //Loop output, only runs if program is initialized
+            if(initialized){
+                
+                System.out.println("");
+                
+                //Trigonometric functions randoms
+                if(userInput.equals("t")){
+                    
+                    randomInteger = rand.nextInt(91);
+                    System.out.println("Based on the new random number "+randomInteger+"\nThe following calculations were done to the 3rd decimal place");
+                    System.out.println("The sine of this random number is "+((Math.round(1000*(Math.sin(Math.PI*((double)randomInteger)/180))))/1000.0));
+                    System.out.println("The cosine of this random number is "+((Math.round(1000*(Math.cos(Math.PI*((double)randomInteger)/180))))/1000.0));
+                    System.out.println("The tangent of this random number is "+((Math.round(1000*(Math.tan(Math.PI*((double)randomInteger)/180))))/1000.0));
+                    
+                //Circles randoms
+                }else if(userInput.equals("c")){
+                    
+                    randomFloat = (Math.round(1000*(1+(19*rand.nextDouble()))))/1000.0;
+                    System.out.println("Based on the new random radius "+randomFloat+"\nThe following calculations were done to the 3rd decimal place");
+                    System.out.println("A circle with this radius has an area of "+(Math.round(1000*(Math.PI*Math.pow(randomFloat, 2))))/1000.0);
+                    System.out.println("A sphere with this radius has a volume of "+(Math.round(1000*((4.0/3.0)*Math.PI*Math.pow(randomFloat, 3))))/1000.0);
+                    
+                //Big number, mass to energy
+                }else if(userInput.equals("b")){
+                    
+                    randomFloat = (Math.round(1000*100000000*rand.nextDouble()))/1000.0;
+                    System.out.println("Based on the new random number "+randomFloat+"\nThe following calculations were done to the 3rd decimal place");
+                    System.out.println("The square root of this number is "+(Math.round(1000*(Math.sqrt(randomFloat))))/1000.0);
+                    System.out.println("The natural logarithm of this number is "+(Math.round(1000*(Math.log(randomFloat))))/1000.0);
+                    System.out.println("The base 10 logarithm of this number is "+(Math.round(1000*(Math.log10(randomFloat))))/1000.0);
+                    
+                    System.out.println("For mass to energy conversion, input the number of decimal places needed as an integer");
+                    decimalPlaces = scan.nextLong();
+                    System.out.println("The amount of mass in grams needed to create "+Math.round(1000*(randomFloat))/1000.0+" Joules is");
+                    System.out.println((Math.round((Math.pow(10,decimalPlaces))*(1000*randomFloat/Math.pow(299792458,2)))/((double)Math.pow(10,decimalPlaces)))+"grams");
+                    
+                //User inputted exponent calculations
+                }else if(userInput.equals("p")){
+                    
+                    System.out.println("Input the base of the exponent to calculate");
+                    baseValue = scan.nextDouble();
+                    System.out.println("Input the exponent");
+                    exponent = scan.nextLong();
+                    System.out.println("input how many decimals are needed in the output");
+                    decimalPlaces = scan.nextLong();
+                    
+                    System.out.print(baseValue+" raised to the power of "+exponent+", rounded to "+decimalPlaces+" decimal places is ");
+                    System.out.println((Math.round(Math.pow(10,decimalPlaces)*Math.pow(baseValue, exponent)))/((double)Math.pow(10,decimalPlaces)));
+                    
+                    
+                //Failed input warning
+                }else{
+                    
+                    System.out.println("Input unrecognized; Try reformatting");
+                    
+                }
+                
+            }
+            
+            //Makes new space so it looks nicer
+            System.out.println();
+            
+            //Inform the user of the control options
+            System.out.println(""
+                    + "Input t for trig functions \n"
+                    + "Input c for circle calculations \n"
+                    + "Input b for large number, and energy to mass \n"
+                    + "Input p for exponential calculator \n"
+                    + "Input q to quit the program ");
+            
+            //recieve user input
+            userInput = scan.nextLine();
+            
+            //Checks if the user wants to quit the program
+            if(userInput.equals("q")){
+                loopAgain = false;
+            }else{
+                loopAgain = true;
+            }
+            
+            //Set initialized to true so that the next loop outputs
+            initialized = true;
+            
+        }
+        
+        
+    }
+}
