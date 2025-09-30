@@ -1,0 +1,97 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.numberformatting;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+import java.text.*;
+
+public class NumberFormatting {
+
+    public static void main(String[] args) {
+        
+        //Start of the code sets up the scanner, random, and format functions
+        Scanner scan = new Scanner(System.in);
+        Random rand = new Random();
+        NumberFormat percentageForm = NumberFormat.getPercentInstance();
+        NumberFormat poundForm = NumberFormat.getCurrencyInstance(Locale.UK);
+        NumberFormat euroForm = NumberFormat.getCurrencyInstance(Locale.FRANCE);
+        DecimalFormat longInt = new DecimalFormat("######################");
+        String runningSum = "";
+        
+        //Declaring a user input variable for later use in the program
+        String choice = "";
+        long pupils = 0, girls = 0, boys = 0, digits = 0;
+        double dollars = 0.0, pounds = 0.0, euros = 0.0;
+        
+        //These two variables provide control for the main loop
+        boolean loopAgain = true, started = false;
+        
+        //Main loop section
+        while(loopAgain){
+            
+            //First part of loop, contains program function depending on user's choice
+            if(started){
+                
+                if(choice.equals("s")){
+                    
+                    System.out.println("Input the total number of students at the school");
+                    pupils = scan.nextLong();
+                    System.out.println("Input the total number of girls at the school");
+                    girls = scan.nextLong();
+                    boys = pupils - girls;
+                    System.out.println("This school is "+percentageForm.format((double)girls/100)+" girls and "+percentageForm.format((double)boys/100)+"% boys.");
+                    
+                } else if(choice.equals("c")){
+                
+                    System.out.println("Input how much money needs to be converted");
+                    dollars = scan.nextDouble();
+                    System.out.println("This is equivalent to "+poundForm.format(dollars*0.75)+" and "+euroForm.format(dollars*0.86));
+                    
+                } else if(choice.equals("p")){
+                
+                    System.out.println("Input how many digits of pi should be included");
+                    digits = scan.nextLong();
+                    runningSum = "";
+                    for(int i = 0; i<digits; i++){runningSum = runningSum+"#";}
+                    DecimalFormat lengthy = new DecimalFormat("#."+runningSum);
+                    System.out.println("Pi is approximately "+lengthy.format(Math.PI));
+                    
+                } else if(choice.equals("l")){
+                    
+                    System.out.println("A random number between 0 and 999e18 is "+longInt.format(rand.nextDouble()*1E21)+"");
+                    
+                } else{
+                    
+                    //If the user's input does not match any choice, respond to the user
+                    System.out.println("Input unrecognized");
+                }
+                
+            }
+         
+            //Controls the First part of loop, by allowing the user to choose which function to proceed with
+            started = true;
+            System.out.println("\n"
+                    + "Enter a character: \n"
+                    + "s for school demographics\n"
+                    + "c for monetary conversions\n"
+                    + "p for digits of pi\n"
+                    + "l for large integer in standard form\n"
+                    + "q to quit the program");
+            choice = scan.next();
+            
+            //Quits the program if the user selects q
+            if(choice.equals("q")){
+                loopAgain = false;
+            }
+            
+        }
+        
+    }
+}
