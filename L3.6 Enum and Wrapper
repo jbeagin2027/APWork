@@ -1,0 +1,119 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.enumerations;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+
+public class Enumerations {
+
+    public static void main(String[] args) {
+        
+        //Start of the code sets up the scanner, and the random function
+        Scanner scan = new Scanner(System.in);
+        Random rand = new Random();
+        
+        //Declaring a user input variable for later use in the program
+        String actionChoice = "", username, gradYear;
+        
+        //These two variables provide control for the main loop
+        boolean loopAgain = true, started = false;
+        
+        //Create the enum for days and for months
+        enum Day {Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday};
+        enum Month {January, February, March, April, May, June, July, August, September, October, November, December};
+        
+        Day day;
+        Month month;
+        //Main loop section
+        while(loopAgain){
+            
+            //First part of loop, contains program function depending on user's choice
+            if(started){
+                
+                if(actionChoice.equals("d")){
+                    
+                    day = Day.Sunday;
+                    System.out.println("Day 1 of the week: "+day);
+                    day = Day.Monday;
+                    System.out.println("Day 2 of the week: "+day);
+                    day = Day.Tuesday;
+                    System.out.println("Day 3 of the week: "+day);
+                    day = Day.Wednesday;
+                    System.out.println("Day 4 of the week: "+day);
+                    day = Day.Thursday;
+                    System.out.println("Day 5 of the week: "+day);
+                    day = Day.Friday;
+                    System.out.println("Day 6 of the week: "+day);
+                    day = Day.Saturday;
+                    System.out.println("Day 7 of the week: "+day);
+                    
+                    
+                } else if(actionChoice.equals("m")){
+                    
+                    month = Month.January;
+                    System.out.println("Month 1: "+month);
+                    month = Month.February;
+                    System.out.println("Month 2: "+month);
+                    month = Month.March;
+                    System.out.println("Month 3: "+month);
+                    month = Month.April;
+                    System.out.println("Month 4: "+month);
+                    month = Month.May;
+                    System.out.println("Month 5: "+month);
+                    month = Month.June;
+                    System.out.println("Month 6: "+month);
+                    month = Month.July;
+                    System.out.println("Month 7: "+month);
+                    month = Month.August;
+                    System.out.println("Month 8: "+month);
+                    month = Month.September;
+                    System.out.println("Month 9: "+month);
+                    month = Month.October;
+                    System.out.println("Month 10: "+month);
+                    month = Month.November;
+                    System.out.println("Month 11: "+month);
+                    month = Month.December;
+                    System.out.println("Month 12: "+month);
+                    
+                } else if(actionChoice.equals("g")){
+                    
+                    System.out.println("Enter your CCHS username");
+                    username = scan.next();
+                    gradYear = username.substring(username.length()-4, username.length());
+                    System.out.println("You graduate in "+gradYear+"!");
+                    System.out.println("In computer language, this is "+Integer.toBinaryString(Integer.valueOf(gradYear)));
+                    
+                } else{
+                    //If the user's input does not match any choice, respond to the user
+                    System.out.println("Input unrecognized");
+                }
+                
+            }
+         
+            //Controls the First part of loop, by allowing the user to choose which function to proceed with
+            started = true;
+            System.out.println("\n"
+                    + "Enter a character: \n"
+                    + "d for days of the week \n"
+                    + "m for months of the year \n"
+                    + "g for graduation year \n"
+                    + "q to quit the program");
+            actionChoice = scan.next();
+            
+            //Quits the program if the user selects q
+            if(actionChoice.equals("q")){
+                loopAgain = false;
+            }
+            
+        }
+        
+        
+    }
+}
