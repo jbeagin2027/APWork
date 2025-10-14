@@ -1,0 +1,115 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.carclasses;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+
+public class CarClasses {
+
+    public static void main(String[] args) {
+        
+        //Initializes the car objects by their name
+        Car VWBug = new Car();
+        Car Prius = new Car();
+        Car Tesla = new Car();
+        Car BMWi8 = new Car();
+        
+        //Sets up each of the four car's stats to be later called
+        //Input the speed power and price for each car
+        VWBug.setEnginePower(10);//values not accurate
+        VWBug.setPrice(10000);
+        VWBug.setMaxSpeed(10000);
+        
+        Prius.setEnginePower(50);
+        Prius.setPrice(100);
+        Prius.setMaxSpeed(12);
+        
+        Tesla.setEnginePower(400);
+        Tesla.setPrice(50000);
+        Tesla.setMaxSpeed(255);
+        
+        BMWi8.setEnginePower(3500);
+        BMWi8.setPrice(1000000);
+        BMWi8.setMaxSpeed(120);
+        
+        //Outputs the information for the Volkswagen
+        System.out.println("\nThe first car is the Volkswagen Bug");
+        System.out.println("It has "+VWBug.getEnginePower()+" horsepower");
+        System.out.println("It has a top speed of "+VWBug.getMaxSpeed()+" miles per hour");
+        System.out.println("It costs $"+VWBug.getPrice());
+        
+        //Outputs the information for the Prius
+        System.out.println("\nThe second car is the Toyota Prius");
+        System.out.println("It has "+Prius.getEnginePower()+" horsepower");
+        System.out.println("It has a top speed of "+Prius.getMaxSpeed()+" miles per hour");
+        System.out.println("It costs $"+Prius.getPrice());
+        
+        //Outputs the information for the Tesla
+        System.out.println("\nThe third car is the Tesla Model 3");
+        System.out.println("It has "+Tesla.getEnginePower()+" horsepower");
+        System.out.println("It has a top speed of "+Tesla.getMaxSpeed()+" miles per hour");
+        System.out.println("It costs $"+Tesla.getPrice());
+        
+        //Outputs the information for the BMW
+        System.out.println("\nThe fourth car is the BMW i8");
+        System.out.println("It has "+BMWi8.getEnginePower()+" horsepower");
+        System.out.println("It has a top speed of "+BMWi8.getMaxSpeed()+" miles per hour");
+        System.out.println("It costs $"+BMWi8.getPrice());
+        
+    }
+}
+
+class Car{
+    
+    //Declares variables that are used inside of a car
+    //These variables are set to private so they cannot be called directly
+    private long enginePower;
+    private double maxSpeed, price;
+    
+    //Constructor allows the creation of car objects
+    public Car(){
+        enginePower = 0;
+        maxSpeed = 0;
+        price = 0;
+    }
+    
+    //Sets up the Accessor functions for this class
+    double getMaxSpeed() {
+        return maxSpeed;//The accessor functions simply return the value
+    }
+    double getPrice() {
+        return price;
+    }
+    long getEnginePower() {
+        return enginePower;
+    }
+    
+    //Create mutator functions for this class
+    void setMaxSpeed(double value){
+        maxSpeed = value; //mutator functions are also simple
+    }
+    void setPrice(double value){
+        price = value;
+    }
+    void setEnginePower(long value){
+        enginePower = value;
+    }
+    
+    //Create the toString function for debugging
+    @Override
+    public String toString() {
+        
+        String result = Double.toString(price)+Double.toString(maxSpeed)+Long.toString(enginePower);
+        return result;
+        
+    }
+    
+    
+}
