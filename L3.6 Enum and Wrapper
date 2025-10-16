@@ -19,6 +19,7 @@ public class Enumerations {
         Scanner scan = new Scanner(System.in);
         Random rand = new Random();
         
+        
         //Declaring a user input variable for later use in the program
         String actionChoice = "", username, gradYear;
         
@@ -88,7 +89,8 @@ public class Enumerations {
                     username = scan.next();
                     gradYear = username.substring(username.length()-4, username.length());
                     System.out.println("You graduate in "+gradYear+"!");
-                    System.out.println("In computer language, this is "+Integer.toBinaryString(Integer.valueOf(gradYear)));
+                    System.out.println("The year after you graduate is "+(Integer.valueOf(gradYear)+1));
+                    System.out.println("In computer language, you graduate in "+Integer.toBinaryString(Integer.valueOf(gradYear)));
                     
                 } else{
                     //If the user's input does not match any choice, respond to the user
