@@ -1,0 +1,84 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.loancalculatorstart;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.text.*;
+import java.util.*;
+
+public class LoanCalculatorStart {
+
+    public static void main(String[] args) {
+        
+        //Creates the percentage form formatting object
+        NumberFormat percentageForm = NumberFormat.getPercentInstance();
+        
+        //Creates the dollar form formatting object for the monthly pay and total pay
+        NumberFormat dollarForm = NumberFormat.getCurrencyInstance(Locale.US);
+
+
+        //Initializes the scanner for user input
+        Scanner scan  = new Scanner(System.in);
+        
+        //Creates the InterestRateCalculator object for use in the program
+        InterestRateCalculator InterestRateCalculator = new InterestRateCalculator();
+        
+        //Prompts the user for the desired loan duration
+        System.out.println("Input how long the loan should last in months: ");
+        InterestRateCalculator.setDuration(scan.nextLong()); //Passes the user's value to the object
+        
+        //Prompts the user for the desired loan amount
+        System.out.println("Input how much money the loan is for");
+        InterestRateCalculator.setLoan(scan.nextLong()); //Takes user value and plugs it into the class
+        
+        //The user is told how much payment per month is needed and the number of months total
+        System.out.println("You will have to pay "+dollarForm.format(InterestRateCalculator.getPayment())+" per month for the next "+InterestRateCalculator.getDuration()+" months.");
+        System.out.println("This amounts to a total of "+dollarForm.format(InterestRateCalculator.getPayment()*InterestRateCalculator.getDuration())+" to be repaid and a "+percentageForm.format(InterestRateCalculator.RATE)+" rate");
+    
+    }
+}
+
+class InterestRateCalculator {
+    
+    //Begins the RATE and declares months and amount
+    public final double RATE = 0.05;
+    private long months, amount;
+    
+    //Constructor allows Class to be used as object
+    public InterestRateCalculator(){
+        
+        months = 0;
+        amount = 0;
+        
+    }
+    
+    //Mutator methods allow the user to set the months and amount
+    public void setDuration(long value) {
+        months = value;
+    }
+    public void setLoan(long value) {
+        amount = value;
+    }
+    
+    //Accessors to return the months and the monthly payment
+    public double getPayment(){
+        
+        //This calculates the payments using simple interest because compound interest is too complicated
+        //Simply multiplies the rate, amount, and years to get the total interest payments
+        //Adds the amount to the interest and divides by the number of months to get the monthly pay
+        return ((months*amount*RATE/12+amount)/months);
+        
+    }
+    public long getDuration(){
+        return months;//Returns the number of months left
+    }
+    
+    
+    
+}
