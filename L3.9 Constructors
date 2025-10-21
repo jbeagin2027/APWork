@@ -1,0 +1,130 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.coursedetails;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+import java.text.*;
+
+public class CourseDetails {
+
+    public static void main(String[] args) {
+        
+        //This creates all of the Course objects and all their stored data
+        
+        //The first block uses the full constructor
+        Course course1 = new Course("Chemistry", "AP CHEM", "Herndon", 1000, 800);
+        Course course2 = new Course("Calculus", "AP CALC BC", "Dahms", 1250, 1100);
+        Course course3 = new Course("US History", "AP US H", "White", 550, 445);
+        
+        //This block of courses are created with the name-only constructor, and must be completed elsewhere
+        Course course4 = new Course("Language and Composition");
+        Course course5 = new Course("Computer Science");
+        
+        //Completes the data for the student's fourth course.
+        course4.setCourse("AP LANG");
+        course4.setInstructor("Werstler");
+        course4.setTotal(1400);
+        course4.setEarnedPoints(1600);
+        
+        //Completes the student's fifth course's data
+        course5.setCourse("AP CS A");
+        course5.setInstructor("Nelson");
+        course5.setTotal(300);
+        course5.setEarnedPoints(285);
+        
+        
+        System.out.println("\n\n----- Course Details 1-5: -----");
+        System.out.print("\nCourse 1:");
+        System.out.println(course1.toString());
+        System.out.print("\nCourse 2:");
+        System.out.println(course2.toString());
+        System.out.print("\nCourse 3:");
+        System.out.println(course3.toString());
+        System.out.print("\nCourse 4:");
+        System.out.println(course4.toString());
+        System.out.print("\nCourse 5:");
+        System.out.println(course5.toString());
+        
+        
+    }
+}
+
+
+class Course{
+    
+    //Declares all of the variables the Course can use
+    private String name, courseID, instructor;
+    private Long totalPoints, pointsEarned;
+    
+    //This creates the constructor that only accepts the course name
+    public Course(String passedName){
+        name = passedName;
+    }
+    
+    //This constructor recieves all of the course details, setting up a full course
+    public Course(String nameIn, String IDIn, String instructorIn, long totalIn, long earnedIn){
+    
+        //Every course variable is declared in the constructor
+        name = nameIn;
+        courseID = IDIn;
+        instructor = instructorIn;
+        totalPoints = totalIn;
+        pointsEarned = earnedIn;
+    
+    }
+    
+    
+    //These methods are mutators for every variable in the Course
+    public void setName(String nameIn){
+        name = nameIn;
+    }
+    public void setCourse(String courseIn){
+        courseID = courseIn;
+    }
+    public void setInstructor(String instructorIn){
+        instructor = instructorIn;
+    }
+    public void setTotal(long totalIn){
+        totalPoints = totalIn;
+    }
+    public void setEarnedPoints(long earnedIn){
+        pointsEarned = earnedIn;
+    }
+    
+    
+    //Accessors for all of the course variables too
+    public String getName(){
+        return name;
+    }
+    public String getCourse(){
+        return courseID;
+    }
+    public String getInstructor(){
+        return instructor;
+    }
+    public long getTotal(){
+        return totalPoints;
+    }
+    public long getEarnedPoints(){
+        return pointsEarned;
+    }
+    
+    //The toString method returns the course information on multiple lines
+    //Each of the course private variables are accounted for and returned
+    //Is returned in a readable format
+    public String toString(){
+        return "\nCourse name: "+name
+                +"\nCourse ID: "+courseID
+                +"\nCourse Instructor: "+instructor
+                +"\nPoints this semester: "+totalPoints
+                +"\nPoints earned this semester: "+pointsEarned;
+    }
+    
+}
