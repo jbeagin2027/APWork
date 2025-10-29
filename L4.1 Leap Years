@@ -1,0 +1,42 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.leapyearboolean;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+
+public class LeapYearBoolean {
+
+    public static void main(String[] args) {
+        
+        //Declares values for the year and sets up a scanner object
+        long year;
+        Scanner scan = new Scanner(System.in);
+        
+        //Receives the year value from the user after prompting them
+        System.out.println("Input the year");
+        year = Integer.valueOf(scan.next());
+        
+        
+        if(year<1582){//This condition triggers if the year is not a part of the current calendar system
+            
+            System.out.println("Enter a year after 1581");
+            
+        }else if((year%4==0)&&(!(year%100==0)||(year%400==0))){//This condition triggers if the year is a multiple of four and is either not a multiple of 100 or is a multiple of 400
+            
+            System.out.println("The year is a leap year!");
+            
+        }else{//This condition triggers if the year is neither out of range or a leap year
+            
+            System.out.println("This year is not a leap year!");
+            
+        }
+        
+    }
+}
