@@ -1,0 +1,160 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.mystore;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+import java.text.*;
+
+public class MyStore {
+
+    public static void main(String[] args) {
+        
+        //Start of the code sets up the scanner, and the random function
+        Scanner scan = new Scanner(System.in);
+        Random rand = new Random();
+        
+        //Creates the dollar
+       NumberFormat dollarForm = NumberFormat.getCurrencyInstance(Locale.US);
+        
+        //Declaring a user input variable for later use in the program
+        String actionChoice = "";
+        
+        //These two variables provide control for the main loop
+        boolean loopAgain = true, started = false;
+        
+        //Declares the budget
+        final double BUDGET = 250.00, TOLERANCE = 0.01;
+        double moneySpent = 0.0;
+        
+        Item item1 = new Item(29.99,"T-Shirt");
+        Item item2 = new Item(125.99,"Shoes");
+        Item item3 = new Item(60.99,"Jeans");
+        Item item4 = new Item(250.00,"Jacket");
+        Item item5 = new Item(25.99,"Hat");
+        Item item6 = new Item(75.99,"Shorts");
+        Item item7 = new Item(88.99,"Blouse");
+        
+        
+        //Main loop section
+        while(loopAgain){
+            
+            //First part of loop, contains program function depending on user's choice
+            if(started){
+                
+                if(actionChoice.equals("1")){
+                    
+                    if((BUDGET-(moneySpent+item1.getPrice()))>=-TOLERANCE){
+                        moneySpent+=item1.getPrice();
+                        System.out.println("You bought a "+item1.getName());
+                    }else{System.out.println("You cannot afford this item!");}
+                    
+                } else if(actionChoice.equals("2")){
+                
+                    if((BUDGET-(moneySpent+item2.getPrice()))>=-TOLERANCE){
+                        moneySpent+=item2.getPrice();
+                        System.out.println("You bought a "+item2.getName());
+                    }else{System.out.println("You cannot afford this item!");}
+                    
+                } else if(actionChoice.equals("3")){
+                    
+                    if((BUDGET-(moneySpent+item3.getPrice()))>=-TOLERANCE){
+                        moneySpent+=item3.getPrice();
+                        System.out.println("You bought a "+item3.getName());
+                    }else{System.out.println("You cannot afford this item!");}
+                    
+                } else if(actionChoice.equals("4")){
+                    
+                    if((BUDGET-(moneySpent+item4.getPrice()))>=-TOLERANCE){
+                        moneySpent+=item4.getPrice();
+                        System.out.println("You bought a "+item4.getName());
+                    }else{System.out.println("You cannot afford this item!");}
+                    
+                } else if(actionChoice.equals("5")){
+                    
+                    if((BUDGET-(moneySpent+item5.getPrice()))>=-TOLERANCE){
+                        moneySpent+=item5.getPrice();
+                        System.out.println("You bought a "+item5.getName());
+                    }else{System.out.println("You cannot afford this item!");}
+                    
+                } else if(actionChoice.equals("6")){
+                    
+                    if((BUDGET-(moneySpent+item6.getPrice()))>=-TOLERANCE){
+                        moneySpent+=item6.getPrice();
+                        System.out.println("You bought a "+item6.getName());
+                    }else{System.out.println("You cannot afford this item!");}
+                    
+                } else if(actionChoice.equals("7")){
+                    
+                    if((BUDGET-(moneySpent+item7.getPrice()))>=-TOLERANCE){
+                        moneySpent+=item7.getPrice();
+                        System.out.println("You bought a "+item7.getName());
+                    }else{System.out.println("You cannot afford this item!");}
+                    
+                } else if(actionChoice.equals("p")){
+                    
+                    loopAgain = false;
+                    
+                } else{
+                    //If the user's input does not match any choice, respond to the user
+                    System.out.println("Input unrecognized");
+                }
+                
+            }
+            
+            //Controls the First part of loop, by allowing the user to choose which function to proceed with
+            started = true;
+            
+            System.out.println("\n"
+                    + "Enter a character: \n"
+                    + "1 to add a T-Shirt to cart \n"
+                    + "2 to add Shoes to the cart \n"
+                    + "3 to add Jeans to the cart \n"
+                    + "4 to add a Jacket to the cart \n"
+                    + "5 to add a Hat to the cart \n"
+                    + "6 to add Shorts to the cart \n"
+                    + "7 to add a Blouse to the cart \n"
+                    + "p to purchase items in cart \n"
+                    + "q to quit the program \n"
+                    + "You still have "+(dollarForm.format(BUDGET-moneySpent)));
+            
+            actionChoice = scan.next();
+            
+            //Quits the program if the user selects q
+            if(actionChoice.equals("q") || (moneySpent >= (224.99+TOLERANCE))){
+                loopAgain = false;
+            }
+            
+        }
+        
+        System.out.println("You purchased all goods for "+(dollarForm.format(moneySpent)));
+        
+    }
+}
+
+class Item{
+    
+    private final double price;
+    private final String name;
+    
+    Item(double pIn, String sIn){
+        
+        price = pIn;
+        name = sIn;
+        
+    }
+    
+    //Accessors
+    public double getPrice(){return price;}
+    public String getName(){return name;}
+    
+    
+    
+}
+
