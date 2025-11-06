@@ -1,0 +1,95 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.shoppinglist;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+import java.text.*;
+
+public class ShoppingList {
+
+    public static void main(String[] args) {
+        
+        //Start of the code sets up the scanner
+        Scanner scan = new Scanner(System.in);
+        
+        //This is the list that will be used for the shopping
+        ArrayList list = new ArrayList<String>();
+        
+        //Declaring a user input variable for later use in the program
+        String actionChoice = "";
+        
+        //Controls whether the loop runs again
+        boolean loopAgain = true;
+        
+        //Main loop section
+        while(loopAgain){
+            
+            //Takes user's input, as long as it is neither empty or the choice r
+            if((!actionChoice.equals(""))&(!actionChoice.equals("r"))){
+                
+                //Simply adds the user's input to the end of the list
+                list.add(actionChoice);
+                
+                //Checks if the user wants to remove an item from the list
+            } else if(actionChoice.equals("r")){
+                
+                //Prompts the user to input the item that they want to remove from the list
+                System.out.println("Enter which object you would like to remove");
+                //Gets the user's choice, and checks whether their input is actually a part of the list
+                actionChoice = scan.nextLine();
+                if(list.contains(actionChoice)){
+                    
+                    //If the user input is a part of the list, it removes the item with that name
+                    //If there are duplicates it removes only one
+                    list.remove(list.indexOf(actionChoice));
+                    
+                }else{
+                    
+                    //Otherwise, the program tells the user that their request to remove an item does not work
+                    System.out.println("The grocery list does not contain that item");
+                    
+                }
+            }
+         
+            //Prepares the data after it
+            if(list.size()>0){
+                
+                System.out.println("Current grocery list:");
+                //Outputs the current list
+                //Does the follow for every element in the list
+                for(int i = 0; i<list.size(); i++){
+                    
+                    //Prints the index plus one, then the list element
+                    System.out.println((i+1)+": "+list.get(i));
+                    
+                }
+                
+            }else{
+                //If the list is empty the program does not display a list, instead this message
+                System.out.println("There are currently no items in the grocery list");
+            }
+            
+            //The user can either input an item they want or use q to quit the program
+            System.out.println("\n"
+                    + "Enter the item you want to add to the list \n"
+                    + "q to quit the program \n"
+                    + "r to remove an item from the list");
+            //recieves user input in the acitonChoice variable
+            actionChoice = scan.nextLine();
+            
+            //Quits the program if the user selects q
+            if(actionChoice.equals("q")){
+                loopAgain = false;
+            }
+            
+        }
+        
+    }
+}
