@@ -1,0 +1,162 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.printstarshapes;
+
+import java.util.*;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+public class PrintStarShapes {
+
+    public static void main(String[] args) {
+        
+        //Start of the code sets up the scanner, and the random function
+        Scanner scan = new Scanner(System.in);
+        Random rand = new Random();
+        
+        //Declaring a user input variable for later use in the program
+        String actionChoice = "";
+        
+        //These two variables provide control for the main loop
+        boolean loopAgain = true, started = false;
+        
+        //These variables are used in the loops to create different sized console shapes
+        int scale = 0;
+        
+        //Main loop section
+        while(loopAgain){
+            
+            
+            
+            //First part of loop, contains program function depending on user's choice
+            if(started){
+                
+                if(actionChoice.equals("a")||actionChoice.equals("b")||actionChoice.equals("c")||actionChoice.equals("d")){
+                    
+                    //Recieves the size of the printed shape from the user
+                    System.out.println("Enter the scale of the printed star shape");
+                    scale = scan.nextInt();
+                }
+                
+                if(actionChoice.equals("a")){ //done
+                    
+                    //User info to check if the printed shape is correct
+                    System.out.println("Printing a descending left side triangle with "+scale+" rows, "+scale+" columns, and "+((scale*scale+scale)/2)+" stars");
+                    
+                    //Main loop prints each row
+                    for(int i = 0; i<scale; i++){
+                        
+                        //Number of stars used is based on the iteration of the main loop
+                        //Each time the main loop runs and increments i, the inner loop runs once less
+                        for(int j = 0; j<(scale-i); j++){
+                            System.out.print("*");
+                        }
+                        
+                        //Adds a new line after the inner loop does its thing
+                        System.out.println("");
+                        
+                    }
+                    
+                } else if(actionChoice.equals("b")){ //done
+                    
+                    System.out.println("Printing an ascending right side triangle with "+scale+" rows, "+scale+" columns, and "+((scale*scale+scale)/2)+" stars");
+                    
+                    //This one prints a decreasing amount of spaces before the stars, which increase with each main loop
+                    for(int i = 0; i<scale; i++){
+                        
+                        for(int j = 0; j<(scale-i); j++){
+                            System.out.print(" ");
+                        }
+                        for(int j = 0; j<=i; j++){
+                            System.out.print("*");
+                        }
+                        
+                        System.out.println("");
+                        
+                    }
+                    
+                } else if(actionChoice.equals("c")){ //done
+                    
+                    System.out.println("Printing a descending right side triangle with "+scale+" rows, "+scale+" columns, and "+((scale*scale+scale)/2)+" stars");
+                    
+                    //The traingle here prints an increasing amount of spaces each time as the triangle starts later and later in each line
+                    for(int i = 0; i<scale; i++){
+                        
+                        for(int j = 0; j<i;j++){
+                            System.out.print(" ");
+                        }
+                        
+                        for(int j = 0; j<(scale-i); j++){
+                            System.out.print("*");
+                        }
+                        
+                        System.out.println("");
+                        
+                    }
+                    
+                } else if(actionChoice.equals("d")){ //done
+                    
+                    System.out.println("Printing a diamond with "+(2*scale)+" rows, "+((2*scale)-1)+" columns, and "+(scale*scale*2)+" stars");
+                    
+                    //The first half prints a vertical triangle expanding on both sides
+                    //The number of spaces decreases by 1 each outer loop but the stars increase by two each time the outer loop runs
+                    for(int i = 0; i<scale; i++){
+                        
+                        for(int j = 0; j<(scale-i); j++){
+                            System.out.print(" ");
+                        }
+                        for(int j = 0; j<(2*i+1); j++){
+                            System.out.print("*");
+                        }
+                        
+                        System.out.println("");
+                        
+                    }
+                    
+                    //This section just does everything before but in "reverse"
+                    for(int i = 0; i<scale; i++){
+                        
+                        for(int j = 0; j<=(i); j++){
+                            System.out.print(" ");
+                        }
+                        for(int j = 0; j<(2*(scale-i)-1); j++){
+                            System.out.print("*");
+                        }
+                        
+                        System.out.println("");
+                        
+                    }
+                    
+                    
+                } else{
+                    //If the user's input does not match any choice, respond to the user
+                    System.out.println("Input unrecognized");
+                }
+                
+            }
+         
+            //Controls the First part of loop, by allowing the user to choose which function to proceed with
+            started = true;
+            System.out.println("\n"
+                    + "Enter a character: \n"
+                    + "a for descending left side triangle\n"
+                    + "b for ascending right side triangle\n"
+                    + "c for descending right side triangle\n"
+                    + "d for symmetrical diamond\n"
+                    + "q to quit the program");
+            actionChoice = scan.next();
+            
+            //Quits the program if the user selects q
+            if(actionChoice.equals("q")){
+                loopAgain = false;
+            }
+            
+        }
+        
+        
+    }
+}
