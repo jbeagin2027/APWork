@@ -68,7 +68,7 @@ public class PrintStarShapes {
                     //This one prints a decreasing amount of spaces before the stars, which increase with each main loop
                     for(int i = 0; i<scale; i++){
                         
-                        for(int j = 0; j<(scale-i); j++){
+                        for(int j = 0; j<(scale-i-1); j++){
                             System.out.print(" ");
                         }
                         for(int j = 0; j<=i; j++){
@@ -106,7 +106,7 @@ public class PrintStarShapes {
                     //The number of spaces decreases by 1 each outer loop but the stars increase by two each time the outer loop runs
                     for(int i = 0; i<scale; i++){
                         
-                        for(int j = 0; j<(scale-i); j++){
+                        for(int j = 0; j<(scale-i-1); j++){
                             System.out.print(" ");
                         }
                         for(int j = 0; j<(2*i+1); j++){
@@ -120,7 +120,7 @@ public class PrintStarShapes {
                     //This section just does everything before but in "reverse"
                     for(int i = 0; i<scale; i++){
                         
-                        for(int j = 0; j<=(i); j++){
+                        for(int j = 0; j<(i); j++){
                             System.out.print(" ");
                         }
                         for(int j = 0; j<(2*(scale-i)-1); j++){
@@ -160,3 +160,5 @@ public class PrintStarShapes {
         
     }
 }
+
+        
