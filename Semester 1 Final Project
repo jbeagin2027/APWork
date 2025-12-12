@@ -22,6 +22,31 @@ public class ChessGameTest {
         Board chessGame = new Board();
         String debug = "";
         
+        System.out.println("Welcome to chess!\nPlay alternates between two players in the console. \nWhite plays first as the capital letters, and the game ends on stalemate or checkmate. \nInput h if you need a guide to the rules of chess \nOtherwise press any key and enter.");
+        
+        debug = scan.next();
+        if(debug.equals("h")||debug.equals("H")){
+            System.out.println(""
+                    + "Chess is played on an 8x8 board between two players\n"
+                    + "Pieces move as follows, except if there is a piece in the direct path of movement:\n"
+                    + "Pawns face towards the enemy team, and are represented by the p's\n"
+                    + "Pawns move can always move forward by one square as long as it is empty\n"
+                    + "If they are on their starting row, they can move forward by two squares\n"
+                    + "Pawns can capture pieces on the enemy team if the enemy piece is immediately diagonal to them and further up\n"
+                    + "If an enemy pawn moves two squares and arrives next to the pawn, it can capture it and move behind it in the same move\n"
+                    + "Knights can move 2 squares in one direction and one square in another, represented by n's\n"
+                    + "Knights can pass through pieces on their move\n"
+                    + "Bishops can move diagonally as far as possible, and are represented by b's\n"
+                    + "Rooks can move orthogonally as far as possible, and are represneted by r's\n"
+                    + "Queens can move as a bishop or a rook does, and are represented by q's\n"
+                    + "Kings are the controlling piece, and must be protected\n"
+                    + "They are represented by the k's, and can move to any square immediately next to them\n"
+                    + "If the king is surrounded, the player loses.\n"
+                    + "Kings can move two squares to either side if they havent moved, are not passing through check,\n"
+                    + "Have space to do so, and the rook on the corner has not yet moved or been captured\n"
+                    + "Pawns can promote on the final rows, into a rook, bishop, queen, or knight\n");
+        }
+        
         while(loopAgainC){
             
             System.out.println(chessGame.toString());
