@@ -1,0 +1,1039 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.chessgametest;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+
+public class ChessGameTest {
+
+    public static void main(String[] args) {
+        
+        Scanner scan = new Scanner(System.in);
+        boolean loopAgainA = false, loopAgainB = false, loopAgainC=true;
+        int startRow = 0, startColumn = 0, endRow = 0, endColumn = 0;
+        String userInput;
+        Board chessGame = new Board();
+        String debug = "";
+        
+        while(loopAgainC){
+            
+            System.out.println(chessGame.toString());
+            
+            if(chessGame.getNextPlayer()){
+                System.out.println("White to move");
+            }else{System.out.println("Black to move");}
+            
+            loopAgainB = true;
+            while(loopAgainB){
+                
+                loopAgainA = true;
+                while(loopAgainA){
+                    System.out.println("Input the row to move the piece from as a number from 0-7");
+                    userInput = scan.next();
+                    if(userInput.equals("0")||userInput.equals("1")||userInput.equals("2")||userInput.equals("3")||userInput.equals("4")||userInput.equals("5")||userInput.equals("6")||userInput.equals("7")){
+                        System.out.println("Inputted "+userInput+" as the row of the moved piece.");
+                        startRow = Integer.parseInt(userInput);
+                        loopAgainA = false;
+                    } else{System.out.println("Input not recognized, try again");}
+                }
+                loopAgainA = true;
+                while(loopAgainA){
+                    System.out.println("Input the column to move the piece from as a number fromm 0-7");
+                    userInput = scan.next();
+                    if(userInput.equals("0")||userInput.equals("1")||userInput.equals("2")||userInput.equals("3")||userInput.equals("4")||userInput.equals("5")||userInput.equals("6")||userInput.equals("7")){
+                        System.out.println("Inputted "+userInput+" as the column of the moved piece.");
+                        startColumn = Integer.parseInt(userInput);
+                        loopAgainA = false;
+                    } else{System.out.println("Input not recognized, try again");}
+                }
+                loopAgainA = true;
+                while(loopAgainA){
+                    System.out.println("Input the row of the destination square as a number from 0-7");
+                    userInput = scan.next();
+                    if(userInput.equals("0")||userInput.equals("1")||userInput.equals("2")||userInput.equals("3")||userInput.equals("4")||userInput.equals("5")||userInput.equals("6")||userInput.equals("7")){
+                        System.out.println("Inputted "+userInput+" as the row of the destination.");
+                        endRow = Integer.parseInt(userInput);
+                        loopAgainA = false;
+                    } else{System.out.println("Input not recognized, try again");}
+                }
+                loopAgainA = true;
+                while(loopAgainA){
+                    System.out.println("Input the column of the destination square as a number from 0-7");
+                    userInput = scan.next();
+                    if(userInput.equals("0")||userInput.equals("1")||userInput.equals("2")||userInput.equals("3")||userInput.equals("4")||userInput.equals("5")||userInput.equals("6")||userInput.equals("7")){
+                        System.out.println("Inputted "+userInput+" as the column of the destination.");
+                        endColumn = Integer.parseInt(userInput);
+                        loopAgainA = false;
+                    } else{System.out.println("Input not recognized, try again");}
+                }
+                
+                if(chessGame.tryMoveEverything(startColumn, startRow, endColumn, endRow)){
+                    loopAgainB = false;
+                    
+                    chessGame.Move(startColumn, startRow, endColumn, endRow);
+                }else{System.out.println("That move is illegal. Try again.");}
+                
+            }
+            if(chessGame.isCheckMate()){
+                loopAgainC=false;
+                if(chessGame.getNextPlayer()){
+                    System.out.println("White is in checkmate, black wins!");
+                }else{System.out.println("Black is in checkmate, white wins!");}
+            }
+            if(chessGame.isStaleMate()){
+                loopAgainC=false;
+                System.out.println("Game is in stalemate, its a draw!");
+            }
+        }
+        
+    }
+    
+}
+    
+    
+
+class Board{
+    
+    enum Piece{WK, WQ, WR, WB, WN, WP, E, BK, BQ, BR, BB, BN, BP};
+    
+    private Piece[][] boardState = new Piece[8][8];//Column then row. White is at [0-7][0-1]
+    private boolean whiteCastled, blackCastled, whiteToMove, lwRookMoved, rwRookMoved, lbRookMoved, rbRookMoved;
+    private int lastStartC = -1, lastStartR = -1, lastEndC = -1, lastEndR = -1, WKC = -1, WKR = -1, BKC = -1, BKR = -1;
+    
+    public Board(){
+        
+        whiteCastled=false;
+        blackCastled=false;
+        whiteToMove=true;
+        
+        lwRookMoved = false;
+        rwRookMoved = false;
+        lbRookMoved = false;
+        rbRookMoved = false;
+        
+        WKC = 4;
+        WKR = 0;
+        BKC = 4;
+        BKR = 7;
+        
+        //Creates empty space in the center of the board
+        for(int i = 2; i<6; i++){
+            for(int j = 0; j<8; j++){
+                boardState[j][i] = Piece.E;
+            }
+        }
+        
+        //Creates White's pawns
+        for(int i = 0; i<8; i++){
+            boardState[i][1] = Piece.WP;
+        }
+        
+        //Creates Black's pawns
+        for(int i = 0; i<8; i++){
+            boardState[i][6] = Piece.BP;
+        }
+        
+        //The White pieces
+        boardState[0][0] = Piece.WR;
+        boardState[1][0] = Piece.WN;
+        boardState[2][0] = Piece.WB;
+        boardState[3][0] = Piece.WQ;
+        boardState[4][0] = Piece.WK;
+        boardState[5][0] = Piece.WB;
+        boardState[6][0] = Piece.WN;
+        boardState[7][0] = Piece.WR;
+        
+        //The Black pieces
+        boardState[0][7] = Piece.BR;
+        boardState[1][7] = Piece.BN;
+        boardState[2][7] = Piece.BB;
+        boardState[3][7] = Piece.BQ;
+        boardState[4][7] = Piece.BK;
+        boardState[5][7] = Piece.BB;
+        boardState[6][7] = Piece.BN;
+        boardState[7][7] = Piece.BR;
+        
+    }
+    
+    public Board(Piece[][] state,boolean white, boolean black, boolean whoseMove, int lastSRow, int lastSCol, int lastERow, int lastECol, int wkc, int wkr, int bkc, int bkr, boolean lwr, boolean rwr, boolean lbr, boolean rbr){
+        
+        if(state.length>7&&state[0].length>7){
+            for(int i = 0; i<8; i++){
+                for(int j = 0; j<8; j++){
+                    if(state[i][j]!=null){
+                        boardState[i][j] = state[i][j];
+                    }else{
+                        boardState[i][j] = Piece.E;
+                    }
+                }
+            }
+        }
+        
+        whiteCastled = white;
+        blackCastled = black;
+        whiteToMove = whoseMove;
+        
+        lwRookMoved = lwr;
+        rwRookMoved = rwr;
+        lbRookMoved = lbr;
+        rbRookMoved = rbr;
+        
+        WKC = wkc;
+        WKR = wkr;
+        BKC = bkc;
+        BKR = bkr;
+        
+        lastStartC = Math.clamp(lastSCol, 0, 7);
+        lastStartR = Math.clamp(lastSRow, 0, 7);
+        lastEndC = Math.clamp(lastECol, 0, 7);
+        lastEndR = Math.clamp(lastERow, 0, 7);
+        
+    }
+    
+    // Source - https://stackoverflow.com/questions/4009198/java-get-greatest-common-divisor
+    // Posted by Matt, modified by community. See post 'Timeline' for change history
+    // Retrieved 2025-11-21, License - CC BY-SA 4.0
+    private int gcd(int a, int b) {
+        if (b==0) return a;
+    return gcd(b,a%b);
+    }
+    //I have no idea how this works^^
+    //Why doesnt java have a built in gcd in the Integer or Math classes?
+    
+    public boolean getNextPlayer(){
+        
+        return whiteToMove;
+        
+    }
+    
+    public boolean tryMoveEverything(int startC, int startR, int endC, int endR){
+        
+        startC = Math.clamp(startC, 0, 7);
+        startR = Math.clamp(startR, 0, 7);
+        endC = Math.clamp(endC, 0, 7);
+        endR = Math.clamp(endR, 0, 7);
+        
+        if((canInWay(startC,startR,endC,endR)&&canTeamMove(startC,startR,endC,endR))&&(isEnPassant(startC,startR,endC,endR)||isCastle(startC,startR,endC,endR)||canPieceMove(startC,startR,endC,endR))){
+            Board tempBoard = new Board(boardState ,whiteCastled, blackCastled, whiteToMove, lastStartR, lastStartC, lastEndR, lastEndC, WKC, WKR, BKC, BKR, lwRookMoved, rwRookMoved, lbRookMoved, rbRookMoved);
+            tempBoard.Move(startC, startR, endC, endR);
+            if(tempBoard.getNextPlayer()){
+                if(tempBoard.isCheck(false)){
+                    return false;
+                }else return true;
+            }else{
+                if(tempBoard.isCheck(true)){
+                    return false;
+                }else return true;
+            }
+            
+        } else return false;
+        
+    }
+    
+    public void Move(int startC, int startR, int endC, int endR){
+        
+        startC = Math.clamp(startC, 0, 7);
+        startR = Math.clamp(startR, 0, 7);
+        endC = Math.clamp(endC, 0, 7);
+        endR = Math.clamp(endR, 0, 7);
+        Piece mP = boardState[startC][startR];
+        Piece cP = boardState[endC][endR];
+        
+        if(isCastle(startC,startR,endC,endR)){
+            
+            
+            if(endC<=3&&endR<=3){boardState[0][0]=Piece.E; boardState[3][0]=Piece.WR;System.out.println("White castled queenside!");}
+            if(endC<=3&&endR>=4){boardState[0][7]=Piece.E; boardState[3][7]=Piece.BR;System.out.println("Black castled queenside!");}
+            if(endC>=4&&endR<=3){boardState[7][0]=Piece.E; boardState[5][0]=Piece.WR;System.out.println("White castled kingside!");}
+            if(endC>=4&&endR>=4){boardState[7][7]=Piece.E; boardState[5][7]=Piece.BR;System.out.println("Black castled kingside!");}
+            
+        }else if(isEnPassant(startC,startR,endC,endR)){
+            
+            System.out.println("En passant!?");
+            boardState[endC][startR] = Piece.E;
+            
+        }
+        
+        if(mP==Piece.WK){
+            WKR = endR;
+            WKC = endC;
+        }
+        
+        if(mP==Piece.BK){
+            BKR = endR;
+            BKC = endC;
+        }
+        
+        boardState[endC][endR] = boardState[startC][startR];
+        boardState[startC][startR] = Piece.E;
+        
+        boolean loopAgainA = true;
+        String userInput = "";
+        Scanner scan = new Scanner(System.in);
+        
+        if(mP==Piece.WP&&endR==7){
+            loopAgainA = true;
+            while(loopAgainA){
+                System.out.println("Input which piece to promote to (Q, R, B, N)");
+                userInput = scan.next();
+                if(userInput.equals("Q")){
+                    boardState[endC][endR] = Piece.WQ;
+                    loopAgainA = false;
+                } else if(userInput.equals("R")){
+                    boardState[endC][endR] = Piece.WR;
+                    loopAgainA = false;
+                } else if(userInput.equals("B")){
+                    boardState[endC][endR] = Piece.WB;
+                    loopAgainA = false;
+                } else if(userInput.equals("N")){
+                    boardState[endC][endR] = Piece.WN;
+                    loopAgainA = false;
+                }else{System.out.println("Input not recognized, try again");}
+            }
+        }
+        if(mP==Piece.BP&&endR==0){
+            loopAgainA = true;
+            while(loopAgainA){
+                System.out.println("Input which piece to promote to (Q, R, B, N)");
+                userInput = scan.next();
+                if(userInput.equals("Q")){
+                    boardState[endC][endR] = Piece.BQ;
+                    loopAgainA = false;
+                } else if(userInput.equals("R")){
+                    boardState[endC][endR] = Piece.BR;
+                    loopAgainA = false;
+                } else if(userInput.equals("B")){
+                    boardState[endC][endR] = Piece.BB;
+                    loopAgainA = false;
+                } else if(userInput.equals("N")){
+                    boardState[endC][endR] = Piece.BN;
+                    loopAgainA = false;
+                }else{System.out.println("Input not recognized, try again");}
+            }
+        }
+        
+        if(whiteToMove){
+            if(isSquareAttacked(true,WKC, WKR)){
+            }
+        }else{
+            if(isSquareAttacked(false,BKC, BKR)){
+            }
+        }
+        
+        System.out.println("Moved piece at "+((char)(97+startC))+(startR+1)+" to "+((char)(97+endC))+(endR+1));
+        
+        whiteToMove=!whiteToMove;
+        
+        ruinTheCastle(startC,startR,endC,endR);
+        
+    }
+    
+    public boolean isCheckMate(){
+        if(isCheck(whiteToMove)){
+            boolean rt = false;
+            
+            for(int i = 0 ; i<8; i++){
+                for(int j = 0 ; j<8; j++){
+                    for(int k = 0 ; k<8; k++){
+                        for(int l = 0 ; l<8; l++){
+                            rt=rt||tryMoveEverything(i,j,k,l);
+                        } 
+                    } 
+                } 
+            }
+            rt=!rt;
+            return rt;
+        }else{return false;}
+    }
+    
+    public boolean isStaleMate(){
+        if(!isCheck(whiteToMove)){
+            boolean rt = false;
+            
+            for(int i = 0 ; i<8; i++){
+                for(int j = 0 ; j<8; j++){
+                    for(int k = 0 ; k<8; k++){
+                        for(int l = 0 ; l<8; l++){
+                            rt=rt||tryMoveEverything(i,j,k,l);
+                        } 
+                    } 
+                } 
+            }
+            rt=!rt;
+            return rt;
+        }else{return false;}
+    }
+    
+    public boolean isCheck(boolean white){
+        
+        if(white){
+            if(isSquareAttacked(true, WKC, WKR)){
+                return true;
+            }else return false;
+        }else{
+            if(isSquareAttacked(false, BKC, BKR)){
+                return true;
+            }else return false;
+        }
+        
+    }
+    
+    private boolean isEnPassant(int startC, int startR, int endC, int endR){
+        
+        startC = Math.clamp(startC, 0, 7);
+        startR = Math.clamp(startR, 0, 7);
+        endC = Math.clamp(endC, 0, 7);
+        endR = Math.clamp(endR, 0, 7);
+        Piece mP = boardState[startC][startR];
+        Piece cP = boardState[endC][startR];
+        int dx = endC-startC;
+        int dy = endR-startR;
+        if(((mP==Piece.WP&&cP==Piece.BP)||(mP==Piece.BP&&cP==Piece.WP))&&(boardState[endC][endR]==Piece.E)){
+            if((whiteToMove==(mP==Piece.WP))&&(Math.abs(dx)==1)&&(Math.abs(dy)==1)&&(whiteToMove==(dy==1))){
+                return true; 
+            } else{return false;}
+        } else{return false;}
+        
+    }
+    
+    private boolean isCastle(int startC, int startR, int endC, int endR){
+        
+        startC = Math.clamp(startC, 0, 7);
+        startR = Math.clamp(startR, 0, 7);
+        endC = Math.clamp(endC, 0, 7);
+        endR = Math.clamp(endR, 0, 7);
+        Piece mP = boardState[startC][startR];
+        Piece cP = boardState[endC][endR];
+        int dx = endC-startC;
+        int dy = endR-startR;
+        
+        if(isPieceWhite(mP).equals(moverToString())&&(mP==Piece.WK||mP==Piece.BK)&&(dy==0)&&((isPieceWhite(mP).equals("true")&&!whiteCastled)||(isPieceWhite(mP).equals("false")&&!blackCastled))){
+            if(endR==0&&endC==2&&!lwRookMoved&&mP==Piece.WK){if(isSquareAttacked(true,4,0)||isSquareAttacked(true,3,0)||isSquareAttacked(true,2,0)){return false;}else{return true;}}
+            else if(endR==0&&endC==6&&!rwRookMoved&&mP==Piece.WK){if(isSquareAttacked(true,4,0)||isSquareAttacked(true,5,0)||isSquareAttacked(true,6,0)){return false;}else{return true;}}
+            else if(endR==7&&endC==2&&!lbRookMoved&&mP==Piece.BK){if(isSquareAttacked(false,4,7)||isSquareAttacked(false,3,7)||isSquareAttacked(false,2,7)){return false;}else{return true;}}
+            else if(endR==7&&endC==6&&!rbRookMoved&&mP==Piece.BK){if(isSquareAttacked(false,4,7)||isSquareAttacked(false,5,7)||isSquareAttacked(false,6,7)){return false;}else{return true;}}
+            else{return false;}
+        } else {return false;}
+        
+    }
+    
+    private void ruinTheCastle(int startC, int startR, int endC, int endR){
+        
+        startC = Math.clamp(startC, 0, 7);
+        startR = Math.clamp(startR, 0, 7);
+        endC = Math.clamp(endC, 0, 7);
+        endR = Math.clamp(endR, 0, 7);
+        
+        if((startR==0&&startC==0)||(endR==0&&endC==0)){lwRookMoved=true;}
+        if((startR==0&&startC==7)||(endR==0&&endC==7)){rwRookMoved=true;}
+        if((startR==7&&startC==0)||(endR==7&&endC==0)){lbRookMoved=true;}
+        if((startR==7&&startC==7)||(endR==7&&endC==7)){rbRookMoved=true;}
+        if((startR==0&&startC==4)||(endR==0&&endC==4)){whiteCastled=true;}
+        if((startR==7&&startC==4)||(endR==7&&endC==4)){blackCastled=true;}
+        
+    }
+    
+    private boolean canPieceMove(int startC, int startR, int endC, int endR){
+        
+        startC = Math.clamp(startC, 0, 7);
+        startR = Math.clamp(startR, 0, 7);
+        endC = Math.clamp(endC, 0, 7);
+        endR = Math.clamp(endR, 0, 7);
+        Piece mP = boardState[startC][startR];
+        Piece cP = boardState[endC][endR];
+        int dx = endC-startC;
+        int dy = endR-startR;
+        
+        if(mP==Piece.WP){
+            if(isPieceWhite(cP).equals("false")&&dy==1&&Math.abs(dx)==1){
+                return true;
+            }else if(cP==Piece.E&&dx==0&&(dy==1||(dy==2&&startR==1))){
+                return true;
+            }else return false;
+        }else if(mP==Piece.BP){
+            if(isPieceWhite(cP).equals("true")&&dy==-1&&Math.abs(dx)==1){
+                return true;
+            }else if(cP==Piece.E&&dx==0&&(dy==-1||(dy==-2&&startR==6))){
+                return true;
+            }else return false;
+        }else if(mP==Piece.WN||mP==Piece.BN){
+            if((Math.abs(dx)==2&&Math.abs(dy)==1)||(Math.abs(dx)==1&&Math.abs(dy)==2)){
+                return true;
+            }else{return false;}
+        }else if(mP==Piece.WB||mP==Piece.BB){
+            if(Math.abs(dx)==Math.abs(dy)){
+                return true;
+            }else{return false;}
+        }else if(mP==Piece.WR||mP==Piece.BR){
+            if(dx==0||dy==0){
+                return true;
+            }else{return false;}
+        }else if(mP==Piece.WQ||mP==Piece.BQ){
+            if((Math.abs(dx)==Math.abs(dy))||dx==0||dy==0){
+                return true;
+            }else{return false;}
+        }else if(mP==Piece.WK||mP==Piece.BK){
+            if(Math.abs(dx)<2&&Math.abs(dy)<2){
+                return true;
+            }else{return false;}
+        }else{return false;}
+        
+    }
+    
+    private String moverToString(){
+    
+    if(whiteToMove){return "true";}
+    else if(false==whiteToMove){return "false";}
+    else{return "null";}
+    
+    }
+    
+    private boolean canTeamMove(int startC, int startR, int endC, int endR){ //Considers start and End squares
+        
+        startC = Math.clamp(startC, 0, 7);
+        startR = Math.clamp(startR, 0, 7);
+        endC = Math.clamp(endC, 0, 7);
+        endR = Math.clamp(endR, 0, 7);
+        
+        Piece mP = boardState[startC][startR]; //movedPiece
+        Piece cP = boardState[endC][endR]; //capturedPiece
+        
+        if(isPieceWhite(mP).equals(moverToString())){
+            if(isPieceWhite(cP).equals(isPieceWhite(mP))){
+                return false;
+            } else return true;
+        }else{return false;}
+        
+    }
+    
+    private boolean canInWay(int startC, int startR, int endC, int endR){
+        
+        startC = Math.clamp(startC, 0, 7);
+        startR = Math.clamp(startR, 0, 7);
+        endC = Math.clamp(endC, 0, 7);
+        endR = Math.clamp(endR, 0, 7);
+        
+        int dx = endC-startC;
+        int dy = endR-startR;
+        int df = Math.max(1,gcd(Math.abs(dx),Math.abs(dy)));
+        int dxf = dx/df;
+        int dyf = dy/df;
+        
+        boolean sc = true;
+        
+        for(int i = 1; i<df; i+=1){
+            if(boardState[startC+(i*dxf)][startR+(i*dyf)]!=Piece.E){sc=false;} 
+        }
+        return sc;
+    }
+    
+    
+    private boolean isSquareAttacked(boolean byWhite, int attC, int attR){
+        
+        attC = Math.clamp(attC, 0, 7);
+        attR = Math.clamp(attR, 0, 7);
+        
+        boolean asf=false;
+        boolean stillCan = true;
+        int iterate = 0;
+        int lR = 0;
+        int lC = 0;
+        if(byWhite){
+            
+            if(attR<6){
+                if(attC>0){
+                    if(boardState[attC-1][attR+1]==Piece.BP){
+                        asf=true;
+                    }
+                }
+                if(attC<7){
+                    if(boardState[attC+1][attR+1]==Piece.BP){
+                        asf=true;
+                    }
+                }
+            }
+            
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR+iterate;
+                lC = attC+iterate;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][lR]==Piece.BQ||boardState[lC][lR]==Piece.BB){
+                        asf = true;
+                    }
+                    if(boardState[lC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR-iterate;
+                lC = attC+iterate;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][lR]==Piece.BQ||boardState[lC][lR]==Piece.BB){
+                        asf = true;
+                    }
+                    if(boardState[lC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR+iterate;
+                lC = attC-iterate;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][lR]==Piece.BQ||boardState[lC][lR]==Piece.BB){
+                        asf = true;
+                    }
+                    if(boardState[lC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR-iterate;
+                lC = attC-iterate;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][lR]==Piece.BQ||boardState[lC][lR]==Piece.BB){
+                        asf = true;
+                    }
+                    if(boardState[lC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            
+            lR = attR+2;
+            lC = attC+1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BN){asf = true;}}
+            lR = attR+1;
+            lC = attC+2;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BN){asf = true;}}
+            lR = attR+2;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BN){asf = true;}}
+            lR = attR-1;
+            lC = attC+2;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BN){asf = true;}}
+            lR = attR-1;
+            lC = attC+2;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BN){asf = true;}}
+            lR = attR+2;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BN){asf = true;}}
+            lR = attR-1;
+            lC = attC-2;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BN){asf = true;}}
+            lR = attR-2;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BN){asf = true;}}
+            
+            lR = attR+1;
+            lC = attC+1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BK){asf = true;}}
+            lR = attR+1;
+            lC = attC+0;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BK){asf = true;}}
+            lR = attR+0;
+            lC = attC+1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BK){asf = true;}}
+            lR = attR+1;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BK){asf = true;}}
+            lR = attR-1;
+            lC = attC+1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BK){asf = true;}}
+            lR = attR-1;
+            lC = attC-0;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BK){asf = true;}}
+            lR = attR-0;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BK){asf = true;}}
+            lR = attR-1;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.BK){asf = true;}}
+            
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR+iterate;
+                lC = attC;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[attC][lR]==Piece.BQ||boardState[attC][lR]==Piece.BR){
+                        asf = true;
+                    }
+                    if(boardState[attC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR-iterate;
+                lC = attC;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[attC][lR]==Piece.BQ||boardState[attC][lR]==Piece.BR){
+                        asf = true;
+                    }
+                    if(boardState[attC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lC = attC+iterate;
+                lR = attR;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][attR]==Piece.BQ||boardState[lC][attR]==Piece.BR){
+                        asf = true;
+                    }
+                    if(boardState[lC][attR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lC = attC-iterate;
+                lR = attR;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][attR]==Piece.BQ||boardState[lC][attR]==Piece.BR){
+                        asf = true;
+                    }
+                    if(boardState[lC][attR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            
+        }else{
+            
+            if(attR>1){
+                if(attC>0){
+                    if(boardState[attC-1][attR-1]==Piece.WP){
+                        asf=true;
+                    }
+                }
+                if(attC<7){
+                    if(boardState[attC+1][attR-1]==Piece.WP){
+                        asf=true;
+                    }
+                }
+            }
+            
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR+iterate;
+                lC = attC+iterate;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][lR]==Piece.WQ||boardState[lC][lR]==Piece.WB){
+                        asf = true;
+                    }
+                    if(boardState[lC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR-iterate;
+                lC = attC+iterate;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][lR]==Piece.WQ||boardState[lC][lR]==Piece.WB){
+                        asf = true;
+                    }
+                    if(boardState[lC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR+iterate;
+                lC = attC-iterate;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][lR]==Piece.WQ||boardState[lC][lR]==Piece.WB){
+                        asf = true;
+                    }
+                    if(boardState[lC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR-iterate;
+                lC = attC-iterate;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][lR]==Piece.WQ||boardState[lC][lR]==Piece.WB){
+                        asf = true;
+                    }
+                    if(boardState[lC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            
+            lR = attR+2;
+            lC = attC+1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WN){asf = true;}}
+            lR = attR+1;
+            lC = attC+2;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WN){asf = true;}}
+            lR = attR+2;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WN){asf = true;}}
+            lR = attR-1;
+            lC = attC+2;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WN){asf = true;}}
+            lR = attR-1;
+            lC = attC+2;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WN){asf = true;}}
+            lR = attR+2;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WN){asf = true;}}
+            lR = attR-1;
+            lC = attC-2;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WN){asf = true;}}
+            lR = attR-2;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WN){asf = true;}}
+            
+            lR = attR+1;
+            lC = attC+1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WK){asf = true;}}
+            lR = attR+1;
+            lC = attC+0;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WK){asf = true;}}
+            lR = attR+0;
+            lC = attC+1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WK){asf = true;}}
+            lR = attR+1;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WK){asf = true;}}
+            lR = attR-1;
+            lC = attC+1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WK){asf = true;}}
+            lR = attR-1;
+            lC = attC-0;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WK){asf = true;}}
+            lR = attR-0;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WK){asf = true;}}
+            lR = attR-1;
+            lC = attC-1;
+            if(lR>=0&&lR<8&&lC>=0&&lC<8){if(boardState[lC][lR]==Piece.WK){asf = true;}}
+            
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR+iterate;
+                lC = attC;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[attC][lR]==Piece.WQ||boardState[attC][lR]==Piece.WR){
+                        asf = true;
+                    }
+                    if(boardState[attC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lR = attR-iterate;
+                lC = attC;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[attC][lR]==Piece.WQ||boardState[attC][lR]==Piece.WR){
+                        asf = true;
+                    }
+                    if(boardState[attC][lR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lC = attC+iterate;
+                lR = attR;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][attR]==Piece.WQ||boardState[lC][attR]==Piece.WR){
+                        asf = true;
+                    }
+                    if(boardState[lC][attR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            stillCan = true;
+            iterate = 1;
+            while(stillCan){
+                lC = attC-iterate;
+                lR = attR;
+                if(lR>=0&&lR<8&&lC>=0&&lC<8){
+                    iterate++;
+                    if(boardState[lC][attR]==Piece.WQ||boardState[lC][attR]==Piece.WR){
+                        asf = true;
+                    }
+                    if(boardState[lC][attR]==Piece.E){
+                        stillCan = true;
+                    } else{stillCan = false;}
+                }else{stillCan=false;}
+            }
+            
+            
+        }
+        
+        return asf;
+        
+    }
+    
+    
+    private String isPieceWhite(Piece s){
+        
+        if(s==Piece.WK||s==Piece.WQ||s==Piece.WR||s==Piece.WB||s==Piece.WN||s==Piece.WP){
+            return "true";
+        } else if (s==Piece.BK||s==Piece.BQ||s==Piece.BR||s==Piece.BB||s==Piece.BN||s==Piece.BP){
+            return "false";
+        } else{
+            return "null";
+        }
+        
+    }
+    
+    private int rawScore(Piece[][] state){
+        
+        int running = 0;
+        
+        for(int i = 0; i<8; i++){
+            
+            for(int j = 0; j<8; j++){
+                
+                Piece cp = state[j][7-i];
+                
+                if(cp==Piece.E){running+=0;}
+                if(cp==Piece.WP){running+=1;}
+                if(cp==Piece.WN){running+=3;}
+                if(cp==Piece.WB){running+=3;}
+                if(cp==Piece.WR){running+=5;}
+                if(cp==Piece.WQ){running+=9;}
+                if(cp==Piece.WK){running+=100;}
+                if(cp==Piece.BP){running+=-1;}
+                if(cp==Piece.BN){running+=-3;}
+                if(cp==Piece.BB){running+=-3;}
+                if(cp==Piece.BR){running+=-5;}
+                if(cp==Piece.BQ){running+=-9;}
+                if(cp==Piece.BK){running+=-100;}
+            
+            }
+            
+        }
+        
+        return running;
+    }
+    
+    @Override
+    public String toString(){
+        
+        String running = "";
+        
+        for(int i = 0; i<8; i++){
+            
+            running+="\n";
+            
+            if(i==0){running+="7   ";}
+            if(i==1){running+="6   ";}
+            if(i==2){running+="5   ";}
+            if(i==3){running+="4   ";}
+            if(i==4){running+="3   ";}
+            if(i==5){running+="2   ";}
+            if(i==6){running+="1   ";}
+            if(i==7){running+="0   ";}
+            
+            for(int j = 0; j<8; j++){
+            
+                Piece cp = boardState[j][7-i];
+                
+                if(cp==Piece.E){running+="  ";}
+                if(cp==Piece.WP){running+="P ";}
+                if(cp==Piece.WN){running+="N ";}
+                if(cp==Piece.WB){running+="B ";}
+                if(cp==Piece.WR){running+="R ";}
+                if(cp==Piece.WQ){running+="Q ";}
+                if(cp==Piece.WK){running+="K ";}
+                if(cp==Piece.BP){running+="p ";}
+                if(cp==Piece.BN){running+="n ";}
+                if(cp==Piece.BB){running+="b ";}
+                if(cp==Piece.BR){running+="r ";}
+                if(cp==Piece.BQ){running+="q ";}
+                if(cp==Piece.BK){running+="k ";}
+            
+            }
+            
+        }
+        running+="\n\n    0 1 2 3 4 5 6 7 ";
+        return running;
+        
+    }
+    
+    
+}
