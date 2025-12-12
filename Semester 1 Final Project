@@ -106,6 +106,7 @@ class Board{
     private Piece[][] boardState = new Piece[8][8];//Column then row. White is at [0-7][0-1]
     private boolean whiteCastled, blackCastled, whiteToMove, lwRookMoved, rwRookMoved, lbRookMoved, rbRookMoved;
     private int lastStartC = -1, lastStartR = -1, lastEndC = -1, lastEndR = -1, WKC = -1, WKR = -1, BKC = -1, BKR = -1;
+    public boolean isRealGame = false;
     
     public Board(){
         
@@ -117,6 +118,7 @@ class Board{
         rwRookMoved = false;
         lbRookMoved = false;
         rbRookMoved = false;
+        isRealGame = true;
         
         WKC = 4;
         WKR = 0;
@@ -190,6 +192,8 @@ class Board{
         BKC = bkc;
         BKR = bkr;
         
+        isRealGame = false;
+        
         lastStartC = Math.clamp(lastSCol, 0, 7);
         lastStartR = Math.clamp(lastSRow, 0, 7);
         lastEndC = Math.clamp(lastECol, 0, 7);
@@ -248,15 +252,15 @@ class Board{
         
         if(isCastle(startC,startR,endC,endR)){
             
-            
+            if(isRealGame){
             if(endC<=3&&endR<=3){boardState[0][0]=Piece.E; boardState[3][0]=Piece.WR;System.out.println("White castled queenside!");}
             if(endC<=3&&endR>=4){boardState[0][7]=Piece.E; boardState[3][7]=Piece.BR;System.out.println("Black castled queenside!");}
             if(endC>=4&&endR<=3){boardState[7][0]=Piece.E; boardState[5][0]=Piece.WR;System.out.println("White castled kingside!");}
             if(endC>=4&&endR>=4){boardState[7][7]=Piece.E; boardState[5][7]=Piece.BR;System.out.println("Black castled kingside!");}
-            
+            }
         }else if(isEnPassant(startC,startR,endC,endR)){
             
-            System.out.println("En passant!?");
+            if(isRealGame){System.out.println("En passant!?");}
             boardState[endC][startR] = Piece.E;
             
         }
@@ -277,7 +281,7 @@ class Board{
         boolean loopAgainA = true;
         String userInput = "";
         Scanner scan = new Scanner(System.in);
-        
+        if(isRealGame){
         if(mP==Piece.WP&&endR==7){
             loopAgainA = true;
             while(loopAgainA){
@@ -318,7 +322,7 @@ class Board{
                 }else{System.out.println("Input not recognized, try again");}
             }
         }
-        
+        }
         if(whiteToMove){
             if(isSquareAttacked(true,WKC, WKR)){
             }
@@ -327,7 +331,7 @@ class Board{
             }
         }
         
-        System.out.println("Moved piece at "+((char)(97+startC))+(startR+1)+" to "+((char)(97+endC))+(endR+1));
+        if(isRealGame){System.out.println("Moved piece at "+((char)(97+startC))+(startR+1)+" to "+((char)(97+endC))+(endR+1));}
         
         whiteToMove=!whiteToMove;
         
