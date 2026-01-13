@@ -1,0 +1,85 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.todolist;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+
+public class ToDoList {
+
+    public static void main(String[] args) {
+        
+        
+        //create list of players in random order
+        List<Task> taskList = new ArrayList<>();
+        taskList.add(new Task("Take out trash", 1, 5));
+        taskList.add(new Task("Do laundry", 3, 2));
+        taskList.add(new Task("File Taxes", 25, 10));
+        taskList.add(new Task("Buy groceries", 5, 20));
+        taskList.add(new Task("Fix the second car", 12, 8));
+        
+        Collections.sort(taskList);
+        
+        System.out.println("List of sorted tasks: \n"+taskList);
+    
+    }
+    
+}
+
+class Task implements Complexity, Priority, Comparable<Task> {
+    
+    private int complexity = 0, priority = 0;
+    private String name = "";
+    
+    
+    public Task(String nameIn, int complexityIn, int priorityIn){
+        
+        name = nameIn;
+        complexity = complexityIn;
+        priority = priorityIn;
+        
+    }
+    
+    
+    public void setComplexity(int input){complexity = input;}
+    public void setPriority(int input){priority = input;}
+    public int getComplexity(){return complexity;}
+    public int getPriority(){return priority;}
+    
+    @Override
+    public int compareTo(Task otherTask){
+    
+        
+        //rigged two comparisons into one integer
+        //fails if complexity differences are more than 50000 times greater than priority
+        //or if priority is greater than 50000 or less than -50000 
+        return ((int)(Integer.compare(otherTask.getPriority(), priority)*(int)Math.ceil(Math.sqrt(Integer.MAX_VALUE-1))))+(Integer.compare(complexity, otherTask.getComplexity()));
+        
+    }
+    
+    @Override
+    public String toString(){return "\nTask: "+name+", Complexity: "+complexity+", Priority Level: "+priority;}
+    
+}
+
+//These two interfaces are used to access/mutate values in Task
+
+interface Complexity{
+    
+    public void setComplexity(int complexity);
+    public int getComplexity();
+    
+}
+
+interface Priority{
+    
+    public void setPriority(int priority);
+    public int getPriority();
+    
+}
