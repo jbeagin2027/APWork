@@ -1,0 +1,207 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.studentmain;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+import java.text.*;
+
+public class StudentMain {
+
+    public static void main(String[] args) {
+        
+        //creates Scanner and ArrayList objects
+        Scanner scan = new Scanner(System.in);
+        ArrayList<Student> students = new ArrayList();
+        
+        //Declares the variables that control the program flow
+        String actionChoice = "";
+        String userInputA = "";
+        String userInputB = "";
+        String userInputC = "";
+        float userInputD = 0;
+        int userInputE = 0;
+        boolean loopAgain = true;
+        
+       
+        while(loopAgain){
+            
+            System.out.println("\n"
+                    + "Enter a character: \n"
+                    + "new to create a new student \n"
+                    + "newname to create a new student and assign their name \n"
+                    + "namestudent to assign a name to a student\n"
+                    + "namecourse to modify a student's course's name\n"
+                    + "gradecourse to modify a student's course's score\n"
+                    + "delete to delete a student from the program\n"
+                    + "viewstudent to show the report for a student\n"
+                    + "students to list all of the students \n"
+                    + "q to quit the program");
+            actionChoice = scan.next();
+            
+            if(actionChoice.equals("q")){ //Quits the program if the user selects q
+                loopAgain = false;
+            } else if(actionChoice.equals("new")){ //Creates a new student and adds it to the end of the array list, displays the student's position in the ArrayList
+                
+                System.out.println("New student created with id: "+students.size());
+                students.add(new Student());
+                
+            } else if(actionChoice.equals("newname")){ //Creates a new student as before but also with their real first and last name
+                
+                System.out.println("Enter the first and last name of the student \n");
+                userInputA = scan.next();
+                userInputB = scan.next();
+                System.out.println("New student, "+userInputA+" "+userInputB+" created with id: "+students.size());
+                students.add(new Student(userInputA, userInputB));
+                
+            } else if(actionChoice.equals("namestudent")){ //Assigns a name to a student based on the index, displays the name that will be overridden
+                
+                System.out.println("Input the id of the student to change the name");
+                userInputA = scan.next();
+                String t = (""+userInputA);
+                boolean tb = true;
+                
+                for(int i = 0; i<t.length(); i++){
+                    boolean dtb = false;
+                    for(int j = 0; j<10; j++){if(t.charAt(i)==((char)(48+j))){dtb=true;}}
+                    if(dtb==false){tb=false;}
+                }
+                
+                if(tb&&(students.size()>Integer.valueOf(userInputA))){
+                    
+                    System.out.println("Enter the first and last name of the student \n");
+                    userInputB = scan.next();
+                    userInputC = scan.next();
+                    System.out.println("Student at id: "+userInputA+" named "+userInputB+" "+userInputC+".");
+                    Student temp = students.get(Integer.valueOf(userInputA));
+                    temp.setFirstName(userInputB); temp.setLastName(userInputC);
+                    
+                }else{System.out.println("No such id exists");}
+                
+            } else if(actionChoice.equals("namecourse")){ //Modifies the course name of the selected student's selected course (1, 2, or 3) and displays the old value
+                
+                System.out.println("Input the id of the student whose course name will be modified");
+                userInputA = scan.next();
+                String t = (""+userInputA);
+                boolean tb = true;
+                for(int i = 0; i<t.length(); i++){
+                    boolean dtb = false;
+                    for(int j = 0; j<10; j++){if(t.charAt(i)==((char)(48+j))){dtb=true;}}
+                    if(dtb==false){tb=false;}
+                }
+                if(tb&&(students.size()>Integer.valueOf(userInputA))){
+                    
+                    Student temp = students.get(Integer.valueOf(userInputA));
+                    System.out.println(temp.toString());
+                    System.out.println("Which course needs to be modified? (1, 2, or 3)");
+                    userInputB = scan.next();
+                    if(userInputB.equals("1")||userInputB.equals("2")||userInputB.equals("3")){
+                        System.out.println("Course "+userInputB+" selected. Enter the new name for the course");
+                        userInputC = scan.nextLine();
+                        temp.setCourseName(Integer.valueOf(userInputB), userInputC);
+                        System.out.println("Course renamed to \""+userInputC+"\"");
+                    }else{System.out.println("Input not recognized");}
+                    
+                }else{System.out.println("No such id exists");}
+                
+                
+            } else if(actionChoice.equals("gradecourse")){ //Modifies the course score of the selected student's selected course (1, 2, or 3) and displays the old value
+                
+                System.out.println("Input the id of the student whose course score will be modified");
+                userInputA = scan.next();
+                String t = (""+userInputA);
+                boolean tb = true;
+                for(int i = 0; i<t.length(); i++){
+                    boolean dtb = false;
+                    for(int j = 0; j<10; j++){if(t.charAt(i)==((char)(48+j))){dtb=true;}}
+                    if(dtb==false){tb=false;}
+                }
+                if(tb&&(students.size()>Integer.valueOf(userInputA))){
+                    
+                    Student temp = students.get(Integer.valueOf(userInputA));
+                    System.out.println(temp.toString());
+                    System.out.println("Which course needs to be modified? (1, 2, or 3)");
+                    userInputB = scan.next();
+                    if(userInputB.equals("1")||userInputB.equals("2")||userInputB.equals("3")){
+                        System.out.println("Course "+userInputB+" selected. Enter the new score for the course as a number from 0-1");
+                        userInputD = scan.nextFloat();
+                        temp.setCourseScore(Integer.valueOf(userInputB), userInputD);
+                        System.out.println("Course score changed to \""+userInputD+"\"");
+                    }else{System.out.println("Input not recognized");}
+                    
+                }else{System.out.println("No such id exists");}
+                
+                
+            } else if(actionChoice.equals("delete")){ //Deletes the student from the ArrayList containing all of the students
+                
+                System.out.println("Input the student id to remove: ");
+                userInputE = scan.nextInt();
+                if(userInputE>=0&&userInputE<students.size()){
+                    System.out.println("Student "+userInputE+" deleted.");
+                    students.remove(userInputE);
+                }else{System.out.println("No such student exists");}
+                
+                
+            } else if(actionChoice.equals("viewstudent")){ //Calls the toString method for the selected student to display all of their data
+                
+                System.out.println("Input the student id to view: ");
+                userInputE = scan.nextInt();
+                if(userInputE>=0&&userInputE<students.size()){
+                    Student temp = students.get(userInputE);
+                    System.out.println(temp.toString());
+                }else{System.out.println("No such student exists");}
+                
+            } else if(actionChoice.equals("students")){ //Lists only the names of every student
+                
+                System.out.println("These are the students in the database: ");
+                for(int i = 0; i<students.size(); i++){
+                    Student temp = students.get(i);
+                    System.out.println("Student "+i+": "+temp.getFirstName()+" "+temp.getLastName());
+                }
+                
+            } else {
+                System.out.println("Input unrecognized");
+            }
+        }
+    }
+}
+
+class Student{
+    //Sets up the variables and their methods for firstName and lastName
+    private String firstName; public String getFirstName(){return firstName;} public void setFirstName(String in){firstName=in;}
+    private String lastName; public String getLastName(){return lastName;} public void setLastName(String in){lastName=in;}
+    //Creates the courses that the student attends
+    private Course course1 = new Course(), course2 = new Course(), course3 = new Course();
+    //Creates the NumberFormat that is used in the toString function
+    private NumberFormat percentage = NumberFormat.getPercentInstance();
+    //Creates the methods to set course name and score for any course the student is taking
+    public void setCourseName(int course, String name){if(course==1){course1.setName(name);}if(course==2){course2.setName(name);}if(course==3){course3.setName(name);}}
+    public void setCourseScore(int course, float score){if(course==1){course1.setScore(score);}if(course==2){course2.setScore(score);}if(course==3){course3.setScore(score);}}
+    //Connects the toString methods of the courses to the student
+    public String viewCourse(int course){if(course==1){return course1.toString();}else if(course==2){return course2.toString();}else if(course==3){return course3.toString();}else{return "";}}
+    //returns the average score of the three classes the student is taking
+    public float averageScore(){return ((course1.getScore()+course2.getScore()+course3.getScore())/3);}
+    //provides the empty and named constructors for the student
+    Student(){firstName="firstName"; lastName="lastName";}
+    Student(String fn, String ln){firstName=fn; lastName=ln;}
+    //Student toString returns the student's name, course info, and average school
+    @Override
+    public String toString(){return("Student: "+firstName+" "+lastName+"\nCourse 1:"+course1.toString()+"\nCourse 2:"+course2.toString()+"\n Course 3:"+course3.toString()+"\nTest Average: "+percentage.format(averageScore()));}
+}
+
+class Course{
+    //Sets up the variables and their methods for score and name 
+    private float score; public float getScore(){return score;} public void setScore(float in){score=in;}
+    private String name; public String getName(){return name;} public void setName(String in){name=in;}
+    //Course only has one constructor because courses are created as students are. Inputting the score and name after prevent the user from being forced to enter 8 variables at once
+    Course(){score=0; name="new course";}
+    //toString method simply displays the course name and the test score
+    @Override
+    public String toString(){return(" "+name+" Score: "+score);}
+}
