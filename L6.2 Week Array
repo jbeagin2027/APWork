@@ -1,0 +1,45 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.weekarray;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+
+public class WeekArray {
+
+    public static void main(String[] args) {
+        
+        //Defines the original 7 days of the week in a String Array
+        String[] weekdays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+        
+        //Prints out each element of the string array
+        System.out.println("The seven days of the week are:");
+        for(int i = 0; i < weekdays.length; i++){
+            System.out.println("Day "+(i+1)+": "+weekdays[i]); //Prints out one day at a time
+        }
+        
+        Random rand = new Random();
+        
+        //Creates a new empty array of size 5
+        String[] temp = new String[5];
+        //Assigns the weekdays values to the temp array
+        for(int i = 0; i < temp.length; i++){
+            temp[i]=weekdays[i];
+        }
+        //Redefines weekdays to refer to the newly created array
+        weekdays = temp;
+        
+        //Prints out the five weekdays that are still in weekdays
+        System.out.println("The five weekdays are: ");
+        for(int i = 0; i < weekdays.length; i++){
+            System.out.println("Day "+(i+1)+": "+weekdays[i]); //Prints out one day at a time
+        }
+        
+    }
+}
