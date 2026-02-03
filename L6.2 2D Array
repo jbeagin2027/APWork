@@ -1,0 +1,63 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.cardassignment;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+
+public class CardAssignment {
+
+    public static void main(String[] args) {
+        
+        //Begins the scanner and random for use in the program
+        Scanner scan = new Scanner(System.in);
+        Random rand = new Random();
+        
+        //Initializes the deckOfCards by defining suits and values
+        String[] suits = {"Hearts", "Spades", "Clubs", "Diamonds"};
+        String[] values = {"Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
+        String[][] deckOfCards = new String[13][4];
+        for(int i = 0; i < 13; i++){
+            for(int j = 0; j < 4; j++){
+                deckOfCards[i][j] = (values[i]+" Of "+suits[j]);
+            }
+        }
+        
+        //Cretes a new list of 1-52 that is used for shuffling
+        ArrayList<Integer> ordered = new ArrayList();
+        for(int i = 0; i < 52; i++){
+            ordered.add(i);
+        }
+        
+        //Shuffles the list of 1-52 randomly
+        for(int i = 0; i < 1000; i++){
+            int a = rand.nextInt(52);
+            int b = ordered.get(a);
+            ordered.remove(a);
+            ordered.add(b);
+        }
+        
+        //Recieves the number of hands from the user
+        System.out.println("Enter the number of hands to generate: ");
+        int number = scan.nextInt();
+        number = Math.clamp(number, 1, 10);
+        for(int i = 0; i < number; i++){//repeats for the number of hands
+            
+            System.out.println("Player "+(i+1)+"'s hand: ");
+            for(int j = 0; j < 5; j++){
+                System.out.print("    Card "+number+":");//Shows user which card num for them
+                System.out.println(deckOfCards[(ordered.get(0))%13][(ordered.get(0))%4]); //pulls the card from element one
+                ordered.remove(0);//removes the value from the possible list
+            }
+            
+        }
+        
+        
+    }
+}
