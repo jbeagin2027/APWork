@@ -1,0 +1,357 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.variousvehicles;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+
+ class VariousVehicles {
+
+    public static void main(String[] args) {
+        
+        System.out.println("\nThe three main vehicles are the Car, Boat, and Airplane");
+        //Creating a Car object
+        Car car1 = new Car("Ford", 110, 5, 3000, 22);
+        //Creating a Boat Object
+        Boat boat1 = new Boat("Larson", 35, 10, 1500, 2);
+        //Creating a Plane Object
+        Airplane plane1 = new Airplane("Boeing", 608, 149, 38000, 20, 129);
+        //Printing the Objects
+        System.out.println("\nThese are example vehicle objects:");
+        System.out.println("\n\t\tThe Car:");
+        System.out.println(car1.toString());
+        System.out.println("\n\t\tThe Boat:");
+        System.out.println(boat1.toString());
+        System.out.println("\n\t\tThe Plane:");
+        System.out.println(plane1.toString());
+        
+        System.out.println("\nThese classes each have a class that inherits from them");
+        System.out.println("Cars have ElectricCars, Planes have FighterPlanes, and Boats have CargoShips");
+        
+        System.out.println("\nThere are also rockets and Robots");
+        System.out.println("\n\t\tThis is the robot:");
+        //Creates a robot
+        Robot robot1 = new Robot("Pacific Steel", 20, 0, 85, "CIM", "RoboRio");
+        
+        System.out.println(robot1.toString());
+        System.out.println("\n\t\tThis is the Rocket");
+        //Creates a rocket Object
+        Rocket rocket1 = new Rocket("NASA", 24800, 3, 310000, 250000, 3, "The Moon");
+        System.out.println(rocket1.toString());
+        
+        
+    }
+}
+
+class Robot extends Vehicle{
+    
+    private final String motorType;
+    private final String computer;
+    private double batteryPercent = 1.0;
+    
+    public String getMotorType(){return motorType;}
+    public String getComputer(){return computer;}
+    
+    public double getBatteryPercent(){return batteryPercent;}
+    public void chargeBattery(){batteryPercent=1.0;}
+    public void drainBattery(double percentDrained){batteryPercent-=percentDrained; batteryPercent = Math.max(0.0,batteryPercent);}
+    
+    public Robot(String inBrand, double inSpeed, int inPassengers, double inCargo, String motor, String comp){
+        super(inBrand, inSpeed, inPassengers, inCargo); //uses the super constructor
+        motorType = motor; 
+        computer = comp;
+        batteryPercent = 1.0;
+    }
+    
+    @Override
+    public String toString(){
+        String result = super.toString() +
+                "Motor:\t\t\t" + this.getMotorType()+"\n" +
+                "Computer:\t\t" + this.getComputer()+"\n" +
+                "Battery Life:\t\t" + this.getBatteryPercent();
+        return  result ;
+    }
+    
+}
+
+class Rocket extends Vehicle{
+    
+    private double range = 0.0;
+    private double maxAcceleration = 0.0;
+    private String target = "";
+    
+    public Rocket(String inBrand, double inSpeed, int inPassengers, double inCargo, double inRange, double inAccel, String inTarget){
+        super(inBrand, inSpeed, inPassengers, inCargo); //uses the super constructor
+        range = inRange; //also include the extra variable in the Vehicle constructor
+        maxAcceleration = inAccel;
+        target = inTarget;
+    }
+    
+    public double getRange(){return range;}
+    public double getMaxAcceleration(){return maxAcceleration;}
+    public String getTarget(){return target;} 
+    
+    public void setRange(double inRange){range=inRange;}
+    public void setMaxAcceleration(double inAcceleration){maxAcceleration = inAcceleration;}
+    public void setTarget(String inTarget){target = inTarget;}
+    
+    //usesd the super toString, as well as adding the new variables to it.
+    @Override
+    public String toString(){
+        String result = super.toString() +
+                "Range:\t\t\t" + this.getRange()+"\n" +
+                "Acceleration: (g)\t" + this.getMaxAcceleration()+"\n" +
+                "Current Target:\t\t" + this.getTarget();
+        return  result ;
+    }
+}
+
+class Boat extends Vehicle{
+    
+    protected int crew = 0;
+    
+    public int getCrew(){return crew;}
+    public void setCrew(int crewIn){crew = crewIn;}
+    
+    public Boat(String inBrand, double inSpeed, int inPassengers, double inCargo, int crewIn){
+        
+       super(inBrand, inSpeed, inPassengers, inCargo); 
+       crew = crewIn;
+       
+    }
+    
+    @Override
+    public String toString(){
+        return (super.toString()+"Crew Size:\t\t" + this.getCrew());
+    }
+    
+}
+
+class CargoShip extends Boat{
+    
+    private final int maxContainers;
+    private int currentContainers;
+    
+    public int getMaxContainers(){return maxContainers;}
+    public int getCurrentContainers(){return currentContainers;}
+    
+    public boolean loadShip(int containersToAdd){if(containersToAdd+currentContainers>maxContainers){currentContainers=maxContainers; return false;}else{currentContainers+=containersToAdd; return true;}}
+    public boolean unloadShip(int containersToRemove){if(containersToRemove-currentContainers<0){currentContainers=0; return false;}else{currentContainers-=containersToRemove; return true;}}
+    
+    public CargoShip(String inBrand, double inSpeed, int inPassengers, double inCargo, int crewIn, int maxContainersIn){
+        
+        super(inBrand, inSpeed, inPassengers, inCargo, crewIn);
+        maxContainers = maxContainersIn;
+        currentContainers = 0;
+        
+    }
+    
+    @Override
+    public String toString(){
+        return (super.toString()+"\nMax Cont.:\t\t" + this.getMaxContainers()+"\nCurrent Cont.: \t"+this.getCurrentContainers());
+    }
+    
+}
+
+class ElectricCar extends Car{
+    
+    private double batteryPercent = 1.0;
+    
+    public double getBatteryPercent(){return batteryPercent;}
+    public void chargeBattery(){batteryPercent=1.0;}
+    public void drainBattery(double percentDrained){batteryPercent-=percentDrained; batteryPercent = Math.max(0.0,batteryPercent);}
+    
+    public ElectricCar(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG){
+        super(inBrand, inSpeed, inPassengers, inCargo, inMPG); //Car comes fully charged, so battery percent is not in constructor
+    }
+    
+    @Override
+    public String toString(){
+        
+        return(super.toString()+"\nBattery:\t"+batteryPercent);
+        
+    }
+    
+}
+
+class Airplane extends Vehicle{
+    
+    protected final int firstClassSeats;
+    protected final int economySeats;
+    
+    int getFirstclassSeats(){return firstClassSeats;}
+    int getEconomySeats(){return economySeats;}
+    
+    public Airplane(String inBrand, double inSpeed, int inPassengers, double inCargo, int firstSeats, int ecoSeats){
+        super(inBrand, inSpeed, inPassengers, inCargo);
+        firstClassSeats = firstSeats;
+        economySeats = ecoSeats;
+        
+    }
+    @Override
+    public String toString(){
+        
+        return (super.toString()+"Seats:\n\tFirst:\t\t"+firstClassSeats+"\n\tEconomy:\t"+economySeats);
+        
+    }
+    
+}
+
+class FighterPlane extends Airplane{
+    
+    protected final int guns;
+    protected final int bombs;
+    
+    public int getGuns(){return guns;}
+    public int getBombs(){return bombs;}
+    
+    public FighterPlane(String inBrand, double inSpeed, int inPassengers, double inCargo, int firstSeats, int ecoSeats, int gunsIn, int bombsIn){
+        
+        super(inBrand, inSpeed, inPassengers, inCargo, firstSeats, ecoSeats);
+        guns = gunsIn;
+        bombs = bombsIn;
+        
+    }
+    
+    @Override
+    public String toString(){
+    
+        return (super.toString()+"Weapons:\nGuns:\t\t\t"+guns+"\nBombs:\t\t"+bombs);
+        
+    }
+    
+}
+
+// Car Class inherits from Vehicle Class
+class Car extends Vehicle{
+    protected final static int wheels = 4;
+    protected final String color = "White";
+    protected boolean spoiler = false;
+    protected boolean stereo = false;
+    protected final double mpg; //has an extra variable, mpg
+
+    public Car(String inBrand, double inSpeed, int inPassengers, double inCargo, double inMPG){
+        super(inBrand, inSpeed, inPassengers, inCargo); //uses the super constructor
+        mpg = inMPG; //also include the extra variable in the Car constructor
+    }
+    //another additional variable
+    public void setSpoiler(boolean inSpoiler){
+        spoiler = inSpoiler;
+    }
+
+    public boolean getSpoiler(){
+        return spoiler;
+    }
+    //another additional variable
+    public void setStereo(boolean inStereo){
+        stereo = inStereo;
+    }
+
+    public boolean getStereo(){
+        return  stereo;
+    }
+    //overrides the super getSpeed method
+    @Override
+    public double getSpeed() {
+        if (spoiler)
+            return super.getSpeed() + 20;
+        else
+            return super.getSpeed();
+    }
+
+    
+
+    public double getMPG(){
+        if(stereo)
+            return mpg - (mpg / 10);
+        else
+            return mpg;
+    }
+    //usesd the super toString, as well as adding the new variable to it.
+    public String toString(){
+        String result = super.toString() +
+                "MPG:\t\t\t" + this.getMPG();
+        return  result ;
+    }
+}
+
+// The Base Vehicle Class, implements the Speedometer interface
+class Vehicle implements Speedometer{
+    //base (Class wide) variables
+    protected String brandName = "";
+    protected double speed = 0.0;
+    protected int passengers = 0;
+    protected double cargoWeight = 0.0;
+    //Base default constructor 
+    public Vehicle(){
+        brandName = "";
+        speed = 0.0;
+        passengers = 0;
+        cargoWeight = 0.0;
+    }
+
+    public Vehicle(String inBrand, double inSpeed, int inPassengers, double inCargo){
+        brandName = inBrand;
+        speed = inSpeed;
+        passengers = inPassengers;
+        cargoWeight = inCargo;
+    }
+
+    //getters and setters
+    public Vehicle(String inBrand){
+        brandName = inBrand;
+    }
+
+    public String getBrand(){
+        return brandName;
+    }
+
+    public  void setBrandName(String inBrand){
+        brandName = inBrand;
+    }
+
+    public double getSpeed(){
+        return  speed;
+    }
+
+    public void setSpeed(double inSpeed){
+        speed = inSpeed;
+    }
+
+    public int getPassengers(){
+        return  passengers;
+    }
+
+    public void setPassengers(int inPassengers){
+        speed = inPassengers;
+    }
+
+    public double getCargoWeight(){
+        return  cargoWeight;
+    }
+
+    public void setCargoWeight(double inCargoWeight){
+        cargoWeight = inCargoWeight;
+    }
+
+    //Base toString
+    public String toString(){
+        String result = "";
+        result = "Brand: \t\t\t" + getBrand() + "\n" +
+                "Speed (mph): \t\t" + getSpeed() + "\n" +
+                "Passengers: \t\t" + getPassengers() + "\n" +
+                "Cargo (lbs): \t\t" + getCargoWeight() + "\n";
+        return result;
+    }
+}
+//the Speedometer interface to show the speed of any vehicle in the same way
+interface Speedometer{
+    public void setSpeed(double inSpeed);
+    public double getSpeed();
+ }
