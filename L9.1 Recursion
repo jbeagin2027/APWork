@@ -1,0 +1,33 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.pascalstriangle;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+import java.util.*;
+public class PascalsTriangle {
+
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Input which row of pascal's triangle needs to be found");
+        int r = scan.nextInt();
+        int[] a = {1};
+        System.out.println(Arrays.toString(getPascal(a,r)));
+        
+    }
+    public static int[] getPascal(int[] row, int remaining){
+        remaining--;
+        int[] temp = new int[row.length+1];
+        for(int i = 1; i<row.length; i++){
+            temp[i] = row[i-1]+row[i];
+        }
+        temp[0]=1;
+        temp[temp.length-1]=1;
+        if(remaining <= 1){return temp;}
+        else{return getPascal(temp, remaining);}
+    }
+}
