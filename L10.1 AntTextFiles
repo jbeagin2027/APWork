@@ -1,0 +1,46 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package textfiletest;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.io.*;
+import java.util.*;
+
+
+public class TextFileTest{
+
+    public static void main(String[] args) {
+        String filePath = "TextFiles/Contacts.txt";
+        //String outPath = "TextFiles/otherText.txt";
+        String contentToWrite = ""
+                + "James Beagin, jbeagin2027@cchsdons.com, 2027, jbeagin2027\n"
+                + "";//More contacts can be added here
+
+        // Write to file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(contentToWrite);
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.err.println("An error occurred while writing to the file: " + e.getMessage());
+        }
+
+        // Read from file
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            System.out.println("\nReading from the file:");
+            int count = 1;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("Contact "+count+": "+line);
+                count++;
+            }
+        } catch (IOException e) {
+            System.err.println("An error occurred while reading from the file: " + e.getMessage());
+        }
+    }
+}
