@@ -1,0 +1,191 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package contactsantfiles;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+import java.io.*;
+
+public class ContactsAntFiles {
+
+    public static void main(String[] args) {
+        
+        String source = "TextFiles/Contacts.txt";
+        Scanner scan = new Scanner(System.in);
+        String actionChoice;
+        boolean loopAgain = true;
+        boolean writeContacts = false;
+        ArrayList<Contact> contacts = new ArrayList();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(source))) {
+            String line;
+            int count = 1;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("Contact "+count+": "+line);
+                String[] csvs = line.split(",");
+                if(csvs.length==3){
+                    contacts.add(new Contact(csvs[0],csvs[1],csvs[2]));
+                }else{System.out.println("error reading file on line "+count);}
+                count++;
+            }
+        } catch (IOException e) {
+            System.err.println("An error occurred while reading from the file: " + e.getMessage());
+        }
+        
+        do{
+            writeContacts = false;
+            System.out.println("\n"
+                    + "Enter a character: \n"
+                    + "a to add a contact \n"
+                    + "e to display contacts by email \n"
+                    + "n to display contacts by name \n"
+                    + "y to display contacts by year \n"
+                    + "r to remove a contact \n"
+                    + "s to save the contacts \n"
+                    + "q to quit the program");
+
+            actionChoice = scan.nextLine();
+            
+            if(actionChoice.equals("q")){
+                loopAgain = false;
+                writeContacts = true;
+            }else if(actionChoice.equals("a")){
+                System.out.println("input contact details separated by commas");
+                String line = scan.nextLine();
+                String[] csvs = line.split(",");
+                if(csvs.length==3){
+                    contacts.add(new Contact(csvs[0],csvs[1],csvs[2]));
+                }else{System.out.println("Bad input");}
+                
+            }else if(actionChoice.equals("e")){
+                contacts = Contact.MergeSort(contacts, "email");
+                for(int i = 0; i < contacts.size(); i++){
+                    System.out.println("Contact "+(i+1)+": "+(contacts.get(i).toString()));
+                }
+            }else if(actionChoice.equals("n")){
+                contacts = Contact.MergeSort(contacts, "name");
+                for(int i = 0; i < contacts.size(); i++){
+                    System.out.println("Contact "+(i+1)+": "+(contacts.get(i).toString()));
+                }
+            }else if(actionChoice.equals("y")){
+                contacts = Contact.MergeSort(contacts, "year");
+                for(int i = 0; i < contacts.size(); i++){
+                    System.out.println("Contact "+(i+1)+": "+(contacts.get(i).toString()));
+                }
+            }else if(actionChoice.equals("r")){
+                for(int i = 0; i < contacts.size(); i++){
+                    System.out.println("Contact "+(i+1)+": "+(contacts.get(i).toString()));
+                }
+                System.out.println("Input the index of the contact to remove");
+                int index = scan.nextInt();
+                if(index>0&&index<=contacts.size()){
+                    contacts.remove(index-1);
+                    System.out.println("Contact removed");
+                }else{System.out.println("No such contact exists");}
+            }else if(actionChoice.equals("s")){
+                writeContacts = true;
+            }else{System.out.println("Input unrecognized");}
+            
+            if(writeContacts){
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(source))) {
+                    for(Contact contact : contacts){
+                        writer.write(contact.saveString());
+                    }
+                    System.out.println("Saved");
+                } catch (IOException e) {
+                    System.err.println("An error occurred while writing to the file: " + e.getMessage());
+                }
+            }
+            
+        }while(loopAgain);
+        
+    }
+    
+}
+
+class Contact{
+
+    private final String email;
+    private final String name;
+    private final String year;
+    
+    public Contact(String emin, String nain, String yein){
+        email=emin;
+        name=nain;
+        year=yein;
+    }
+    
+    public String getEmail(){return email;}
+    public String getName(){return name;}
+    public String getYear(){return year;}
+    
+    //Merge Sort that uses the compare method
+    static ArrayList<Contact> MergeSort(ArrayList<Contact> contactsToSort, String sortType){
+        
+        if(contactsToSort.size()==1){
+            return contactsToSort;
+        }
+        
+        ArrayList<Contact> temp1 = new ArrayList();
+        ArrayList<Contact> temp2 = new ArrayList();
+        ArrayList<Contact> temp3 = new ArrayList();
+        
+        for(int i = 0; i < contactsToSort.size(); i++){
+            if(i < contactsToSort.size()/2){temp1.add(contactsToSort.get(i));}
+            else{temp2.add(contactsToSort.get(i));}
+        }
+        
+        temp1 = MergeSort(temp1, sortType);
+        temp2 = MergeSort(temp2, sortType);
+        
+        for(int i = 0; i < contactsToSort.size(); i++){
+            if(!temp1.isEmpty()&&!temp2.isEmpty()){
+                if(compare(temp1.get(0),temp2.get(0),sortType)==temp1.get(0)){
+                    temp3.add(temp1.get(0));
+                    temp1.remove(0);
+                }else{
+                    temp3.add(temp2.get(0));
+                    temp2.remove(0);
+                }
+            }else if(temp1.isEmpty()){
+                temp3.add(temp2.get(0));
+                temp2.remove(0);
+            }else if(temp2.isEmpty()){
+                temp3.add(temp1.get(0));
+                temp1.remove(0);
+            }
+        }
+        return temp3;
+        
+    }
+    
+    //Custom compare method that returns the correct object instead of an int value
+    private static Contact compare(Contact in1, Contact in2, String sortType){
+        if(sortType.equals("email")){
+            return (in1.getEmail().compareTo(in2.getEmail()) > 0) ? in2 : in1;
+        }
+        if(sortType.equals("name")){
+            return (in1.getName().compareTo(in2.getName()) > 0) ? in2 : in1;
+        }
+        if(sortType.equals("year")){
+            return (in1.getYear().compareTo(in2.getYear()) > 0) ? in2 : in1;
+        }
+        return null;
+    }
+    
+    @Override
+    public String toString(){
+        return ("Email: "+email+", Name: "+name+", Year: "+year);
+    }
+    
+    public String saveString(){
+        return (email+","+name+","+year+"\n");
+    }
+    
+}
