@@ -1,1 +1,113 @@
+package escapethelabyrinth;
+
+/**
+ *
+ * @author jbeagin2027
+ */
+
+import java.util.*;
+import java.io.*;
+
+public class EscapeTheLabyrinth {
+    
+    public static void main(String[] args) {
+        
+        
+    }
+    private ArrayList<Thing> getObjectsFromFiles(ArrayList<String> filepaths){
+        
+        ArrayList<Thing> Objects = new ArrayList();
+        
+        for(String path : filepaths){
+            
+            try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            String header = reader.readLine();
+            
+            while(reader.ready()){
+                String nextObjectString = reader.readLine();
+                String[] csvars = nextObjectString.split(",");
+                if(header.equals("room")&&csvars.length==3){
+                    //Constructs a room and adds it to the arraylist
+                }else if(header.equals("itemtype")&&csvars.length==2){
+                    //Constructs an item type
+                }else if(header.equals("item")&&csvars.length==4){
+                    //Constructs an item
+                }else if(header.equals("puzzle")&&csvars.length==5){
+                    //Constructs a puzzle object
+                }
+                
+                
+            }
+            
+            //Checks if each puzzle, item, itemtype, room references other objects that are real
+            //If the object references other objects that dont exist, or exists in the same spot as another, then those objects are removed.
+            
+            } catch (IOException e) {
+                System.err.println("An error occurred while reading from the file: " + e.getMessage());
+            }
+
+        }
+        
+        return Objects;
+    }
+    
+}
+
+
+
+class Thing{
+    private String type;
+    public void setType(String in){type=in;}
+    public String getType(){return type;}
+}
+
+class ItemType extends Thing{
+    
+    private String ItemTypeName;
+    private String ItemGroupName;
+    private String ItemTypeSpec;
+    
+    public ItemType(){}
+    
+    class Item{
+        
+        private Room location;
+        private boolean isWithPlayer;
+        private int count;
+        private int itemVar1;
+        private int itemVar2;
+        
+    }
+    
+}
+
+class Room extends Thing{
+    
+    private int[] location;
+    private ArrayList<ItemType.Item> items;
+    private Puzzle puzzleInRoom;
+    private boolean isFinalRoom;
+    private String roomName;
+    private boolean requiresItem;
+    private ItemType itemRequired;
+    private String roomContent;
+    
+}
+
+class Puzzle extends Thing{
+    
+    private String puzzleScreen;
+    private String winCondition;
+    private Puzzle nextPuzzle;
+    private boolean finalPuzzle;
+    private String puzzleName;
+    
+    public String showPuzzle(){return puzzleScreen;}
+    public boolean Final(){return finalPuzzle;}
+    public String name(){return puzzleName;}
+    public boolean isWinCondition(String input){return (winCondition.equalsIgnoreCase(input.trim()));}
+    
+}
+
+
 
