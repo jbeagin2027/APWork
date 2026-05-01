@@ -16,15 +16,17 @@ public class EscapeTheLabyrinth {
     }
     private ArrayList<Thing> getObjectsFromFiles(ArrayList<String> filepaths){
         
-        ArrayList<Thing> Objects = new ArrayList();
+        ArrayList<Thing> Things = new ArrayList();
         
+        //Searches for objects in each text file inputted
         for(String path : filepaths){
             
             try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            //Header determines which types of objects are in the file
             String header = reader.readLine();
             
             while(reader.ready()){
-                String nextObjectString = reader.readLine();
+                String nextObjectString = reader.();
                 String[] csvars = nextObjectString.split(",");
                 if(header.equals("room")&&csvars.length==3){
                     //Constructs a room and adds it to the arraylist
@@ -39,8 +41,7 @@ public class EscapeTheLabyrinth {
                 
             }
             
-            //Checks if each puzzle, item, itemtype, room references other objects that are real
-            //If the object references other objects that dont exist, or exists in the same spot as another, then those objects are removed.
+            
             
             } catch (IOException e) {
                 System.err.println("An error occurred while reading from the file: " + e.getMessage());
@@ -48,7 +49,13 @@ public class EscapeTheLabyrinth {
 
         }
         
-        return Objects;
+        //Checks if each puzzle, item, itemtype, room references other objects that are real
+        //If the object references other objects that dont exist, or exists in the same spot as another, then those objects are removed.
+        for(Thing thing : Things){
+                ;
+        }
+        
+        return Things;
     }
     
 }
@@ -56,7 +63,7 @@ public class EscapeTheLabyrinth {
 
 
 class Thing{
-    private String type;
+    private String type = "";
     public void setType(String in){type=in;}
     public String getType(){return type;}
 }
@@ -66,16 +73,60 @@ class ItemType extends Thing{
     private String ItemTypeName;
     private String ItemGroupName;
     private String ItemTypeSpec;
+
+    public String getItemTypeName() {
+        return ItemTypeName;
+    }
+
+    public String getItemGroupName() {
+        return ItemGroupName;
+    }
+
+    public String getItemTypeSpec() {
+        return ItemTypeSpec;
+    }
+
+    public ItemType(String ItemTypeName, String ItemGroupName, String ItemTypeSpec) {
+        this.ItemTypeName = ItemTypeName;
+        this.ItemGroupName = ItemGroupName;
+        this.ItemTypeSpec = ItemTypeSpec;
+    }
+    
+    
     
     public ItemType(){}
     
     class Item{
         
-        private Room location;
-        private boolean isWithPlayer;
+        private String location;
         private int count;
         private int itemVar1;
         private int itemVar2;
+
+        public String getLocation() {
+            return location;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public int getItemVar1() {
+            return itemVar1;
+        }
+
+        public int getItemVar2() {
+            return itemVar2;
+        }
+
+        public Item(String location, int count, int itemVar1, int itemVar2) {
+            this.location = location;
+            this.count = count;
+            this.itemVar1 = itemVar1;
+            this.itemVar2 = itemVar2;
+        }
+        
+        
         
     }
     
@@ -83,14 +134,61 @@ class ItemType extends Thing{
 
 class Room extends Thing{
     
-    private int[] location;
+    private ArrayList<String> adjacentRooms;
     private ArrayList<ItemType.Item> items;
-    private Puzzle puzzleInRoom;
+    private String puzzleInRoom;
     private boolean isFinalRoom;
+    private boolean completed;
     private String roomName;
-    private boolean requiresItem;
-    private ItemType itemRequired;
+    private String itemRequired;
     private String roomContent;
+    
+    public Room(ArrayList<String> paths, ArrayList<ItemType.Item> it, String roompz, boolean fin, boolean comp, String name, String itemreq, String roomco){
+        
+        adjacentRooms = paths;
+        items = it;
+        puzzleInRoom = roompz;
+        isFinalRoom = fin;
+        completed = comp;
+        roomName = name;
+        itemRequired = itemreq;
+        roomContent = roomco;
+        
+    }
+
+    public ArrayList<String> getAdjacentRooms() {
+        return adjacentRooms;
+    }
+
+    public ArrayList<ItemType.Item> getItems() {
+        return items;
+    }
+
+    public String getPuzzleInRoom() {
+        return puzzleInRoom;
+    }
+
+    public boolean isIsFinalRoom() {
+        return isFinalRoom;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public String getItemRequired() {
+        return itemRequired;
+    }
+
+    public String getRoomContent() {
+        return roomContent;
+    }
+    
+    
     
 }
 
@@ -98,16 +196,21 @@ class Puzzle extends Thing{
     
     private String puzzleScreen;
     private String winCondition;
-    private Puzzle nextPuzzle;
-    private boolean finalPuzzle;
+    private String nextPuzzle;
     private String puzzleName;
     
     public String showPuzzle(){return puzzleScreen;}
-    public boolean Final(){return finalPuzzle;}
+    public String getNextPuzzle(){return nextPuzzle;}
     public String name(){return puzzleName;}
     public boolean isWinCondition(String input){return (winCondition.equalsIgnoreCase(input.trim()));}
     
+    public Puzzle(String pzScreen, String pzWin, String pzNext, String pzName){
+        
+        puzzleScreen = pzScreen;
+        winCondition = pzWin;
+        nextPuzzle = pzNext;
+        puzzleName = pzName;
+        
+    }
+    
 }
-
-
-
