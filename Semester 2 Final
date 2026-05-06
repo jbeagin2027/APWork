@@ -54,8 +54,7 @@ public class EscapeTheLabyrinth {
         for(Thing thing : Things){
             //Get name of thing and search
             for(Thing thing : Things){
-                if(thing.getName().equals("")){
-                    
+                if(thing.getName().equals("")){ //Instead of quotes put the variable
                 }else{
                     //remove thing from the Things lsit
                 }
