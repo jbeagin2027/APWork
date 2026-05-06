@@ -52,7 +52,14 @@ public class EscapeTheLabyrinth {
         //Checks if each puzzle, item, itemtype, room references other objects that are real
         //If the object references other objects that dont exist, or exists in the same spot as another, then those objects are removed.
         for(Thing thing : Things){
-                ;
+            //Get name of thing and search
+            for(Thing thing : Things){
+                if(thing.getName().equals("")){
+                    
+                }else{
+                    //remove thing from the Things lsit
+                }
+            }
         }
         
         return Things;
