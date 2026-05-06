@@ -13,55 +13,7 @@ public class EscapeTheLabyrinth {
     public static void main(String[] args) {
         
         
-    }
-    private ArrayList<Thing> getObjectsFromFiles(ArrayList<String> filepaths){
         
-        ArrayList<Thing> Things = new ArrayList();
-        
-        //Searches for objects in each text file inputted
-        for(String path : filepaths){
-            
-            try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-            //Header determines which types of objects are in the file
-            String header = reader.readLine();
-            
-            while(reader.ready()){
-                String nextObjectString = reader.();
-                String[] csvars = nextObjectString.split(",");
-                if(header.equals("room")&&csvars.length==3){
-                    //Constructs a room and adds it to the arraylist
-                }else if(header.equals("itemtype")&&csvars.length==2){
-                    //Constructs an item type
-                }else if(header.equals("item")&&csvars.length==4){
-                    //Constructs an item
-                }else if(header.equals("puzzle")&&csvars.length==5){
-                    //Constructs a puzzle object
-                }
-                
-                
-            }
-            
-            
-            
-            } catch (IOException e) {
-                System.err.println("An error occurred while reading from the file: " + e.getMessage());
-            }
-
-        }
-        
-        //Checks if each puzzle, item, itemtype, room references other objects that are real
-        //If the object references other objects that dont exist, or exists in the same spot as another, then those objects are removed.
-        for(Thing thing : Things){
-            //Get name of thing and search
-            for(Thing thing : Things){
-                if(thing.getName().equals("")){ //Instead of quotes put the variable
-                }else{
-                    //remove thing from the Things lsit
-                }
-            }
-        }
-        
-        return Things;
     }
     
 }
@@ -69,8 +21,8 @@ public class EscapeTheLabyrinth {
 
 
 class Thing{
-    private String type = "";
-    private String name;
+    protected String type = "";
+    protected String name;
     public void setType(String in){type=in;}
     public String getType(){return type;}
     public void setName(String in){name = in;}
@@ -96,8 +48,7 @@ class ItemType extends Thing{
         return ItemTypeSpec;
     }
 
-    public ItemType(String ItemTypeName, String ItemGroupName, String ItemTypeSpec) {
-        this.ItemTypeName = ItemTypeName;
+    public ItemType(String ItemGroupName, String ItemTypeSpec) {
         this.ItemGroupName = ItemGroupName;
         this.ItemTypeSpec = ItemTypeSpec;
     }
@@ -153,18 +104,16 @@ class Room extends Thing{
     private String puzzleInRoom;
     private boolean isFinalRoom;
     private boolean completed;
-    private String name;
     private String itemRequired;
     private String roomContent;
     
-    public Room(ArrayList<String> paths, ArrayList<ItemType.Item> it, String roompz, boolean fin, boolean comp, String name, String itemreq, String roomco){
+    public Room(ArrayList<String> paths, ArrayList<ItemType.Item> it, String roompz, boolean fin, boolean comp, String itemreq, String roomco){
         
         adjacentRooms = paths;
         items = it;
         puzzleInRoom = roompz;
         isFinalRoom = fin;
         completed = comp;
-        this.name = name;
         itemRequired = itemreq;
         roomContent = roomco;
         
@@ -211,7 +160,6 @@ class Puzzle extends Thing{
     
     public String showPuzzle(){return puzzleScreen;}
     public String getNextPuzzle(){return nextPuzzle;}
-    public String name(){return puzzleName;}
     public boolean isWinCondition(String input){return (winCondition.equalsIgnoreCase(input.trim()));}
     
     public Puzzle(String pzScreen, String pzWin, String pzNext, String pzName){
@@ -219,7 +167,6 @@ class Puzzle extends Thing{
         puzzleScreen = pzScreen;
         winCondition = pzWin;
         nextPuzzle = pzNext;
-        puzzleName = pzName;
         
     }
     
