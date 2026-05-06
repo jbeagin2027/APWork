@@ -70,18 +70,22 @@ public class EscapeTheLabyrinth {
 
 class Thing{
     private String type = "";
+    private String name;
     public void setType(String in){type=in;}
     public String getType(){return type;}
+    public void setName(String in){name = in;}
+    public String getName(){return name;}
+    public Thing(){}
 }
 
 class ItemType extends Thing{
     
-    private String ItemTypeName;
+    private String name;
     private String ItemGroupName;
     private String ItemTypeSpec;
 
-    public String getItemTypeName() {
-        return ItemTypeName;
+    public String getName() {
+        return name;
     }
 
     public String getItemGroupName() {
@@ -102,12 +106,15 @@ class ItemType extends Thing{
     
     public ItemType(){}
     
-    class Item{
+    class Item extends Thing{
         
         private String location;
         private int count;
         private int itemVar1;
         private int itemVar2;
+        private String name;
+
+        public String getName(){return name;}
 
         public String getLocation() {
             return location;
@@ -125,11 +132,12 @@ class ItemType extends Thing{
             return itemVar2;
         }
 
-        public Item(String location, int count, int itemVar1, int itemVar2) {
+        public Item(String location, int count, int itemVar1, int itemVar2, String nIn) {
             this.location = location;
             this.count = count;
             this.itemVar1 = itemVar1;
             this.itemVar2 = itemVar2;
+            name = nIn;
         }
         
         
@@ -145,7 +153,7 @@ class Room extends Thing{
     private String puzzleInRoom;
     private boolean isFinalRoom;
     private boolean completed;
-    private String roomName;
+    private String name;
     private String itemRequired;
     private String roomContent;
     
@@ -156,7 +164,7 @@ class Room extends Thing{
         puzzleInRoom = roompz;
         isFinalRoom = fin;
         completed = comp;
-        roomName = name;
+        this.name = name;
         itemRequired = itemreq;
         roomContent = roomco;
         
@@ -182,9 +190,6 @@ class Room extends Thing{
         return completed;
     }
 
-    public String getRoomName() {
-        return roomName;
-    }
 
     public String getItemRequired() {
         return itemRequired;
@@ -203,7 +208,6 @@ class Puzzle extends Thing{
     private String puzzleScreen;
     private String winCondition;
     private String nextPuzzle;
-    private String puzzleName;
     
     public String showPuzzle(){return puzzleScreen;}
     public String getNextPuzzle(){return nextPuzzle;}
