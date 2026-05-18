@@ -1,14 +1,15 @@
-package escapethelabyrinth;
-
-/**
- *
- * @author jbeagin2027
- */
+package finalcsproject;
 
 import java.util.*;
 import java.io.*;
 
-public class EscapeTheLabyrinth {
+public class FinalCSProject {
+
+    public final static String SAVE_PATH = "save.txt";
+    public final static String ITEM_PATH = "item.txt";
+    public final static String ROOM_PATH = "room.txt";
+    public final static String PUZZLE_PATH = "puzzle.txt";
+
     
     public static void main(String[] args) {
         
@@ -16,158 +17,273 @@ public class EscapeTheLabyrinth {
         
     }
     
-}
-
-
-
-class Thing{
-    protected String type = "";
-    protected String name;
-    public void setType(String in){type=in;}
-    public String getType(){return type;}
-    public void setName(String in){name = in;}
-    public String getName(){return name;}
-    public Thing(){}
-}
-
-class ItemType extends Thing{
-    
-    private String name;
-    private String ItemGroupName;
-    private String ItemTypeSpec;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getItemGroupName() {
-        return ItemGroupName;
-    }
-
-    public String getItemTypeSpec() {
-        return ItemTypeSpec;
-    }
-
-    public ItemType(String ItemGroupName, String ItemTypeSpec) {
-        this.ItemGroupName = ItemGroupName;
-        this.ItemTypeSpec = ItemTypeSpec;
-    }
-    
-    
-    
-    public ItemType(){}
-    
-    class Item extends Thing{
-        
-        private String location;
-        private int count;
-        private int itemVar1;
-        private int itemVar2;
-        private String name;
-
-        public String getName(){return name;}
-
-        public String getLocation() {
-            return location;
+    public static ArrayList<String> getFile(String path) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            return new ArrayList<>(reader.readAllLines());
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + path);
+            return new ArrayList<>();
         }
-
-        public int getCount() {
-            return count;
-        }
-
-        public int getItemVar1() {
-            return itemVar1;
-        }
-
-        public int getItemVar2() {
-            return itemVar2;
-        }
-
-        public Item(String location, int count, int itemVar1, int itemVar2, String nIn) {
-            this.location = location;
-            this.count = count;
-            this.itemVar1 = itemVar1;
-            this.itemVar2 = itemVar2;
-            name = nIn;
-        }
-        
-        
-        
     }
     
-}
+    public static ArrayList<Item> getItems() {
 
-class Room extends Thing{
-    
-    private ArrayList<String> adjacentRooms;
-    private ArrayList<ItemType.Item> items;
-    private String puzzleInRoom;
-    private boolean isFinalRoom;
-    private boolean completed;
-    private String itemRequired;
-    private String roomContent;
-    
-    public Room(ArrayList<String> paths, ArrayList<ItemType.Item> it, String roompz, boolean fin, boolean comp, String itemreq, String roomco){
-        
-        adjacentRooms = paths;
-        items = it;
-        puzzleInRoom = roompz;
-        isFinalRoom = fin;
-        completed = comp;
-        itemRequired = itemreq;
-        roomContent = roomco;
-        
-    }
+        ArrayList<Item> items = new ArrayList<>();
+        ArrayList<String> rawLines = getFile(ITEM_PATH);
 
-    public ArrayList<String> getAdjacentRooms() {
-        return adjacentRooms;
-    }
+        boolean inObject = false;
+        String currentTag = null;
 
-    public ArrayList<ItemType.Item> getItems() {
+        String name = "";
+        String location = "";
+        String countStr = "";
+        String description = "";
+
+        for (String line : rawLines) {
+
+            if (line.equals("OBJECT")) {
+                inObject = true;
+                name = location = countStr = description = "";
+                currentTag = null;
+            }
+            else if (line.equals("END_OBJECT")) {
+                items.add(new Item(name.trim(),Integer.parseInt(countStr.trim()),location.trim(),description.trim()));
+                inObject = false;
+            }
+            else if (inObject) {
+
+                if (line.equals("<name>")) currentTag = "name";
+                else if (line.equals("</name>")) currentTag = null;
+
+                else if (line.equals("<location>")) currentTag = "location";
+                else if (line.equals("</location>")) currentTag = null;
+
+                else if (line.equals("<count>")) currentTag = "count";
+                else if (line.equals("</count>")) currentTag = null;
+
+                else if (line.equals("<description>")) currentTag = "description";
+                else if (line.equals("</description>")) currentTag = null;
+
+                else if ("name".equals(currentTag)) name += line + "\n";
+                else if ("location".equals(currentTag)) location += line + "\n";
+                else if ("count".equals(currentTag)) countStr += line;
+                else if ("description".equals(currentTag)) description += line + "\n";
+            }
+        }
         return items;
     }
+    
+    public static ArrayList<Room> getRooms(ArrayList<Puzzle> puzzles) {
 
-    public String getPuzzleInRoom() {
-        return puzzleInRoom;
-    }
+        ArrayList<Room> rooms = new ArrayList<>();
+        ArrayList<String> rawLines = getFile(ROOM_PATH);
+        
+        boolean inObject = false;
+        String currentTag = null;
+        
+        String name = "";
+        String description = "";
+        String connectionsStr = "";
+        String itemsStr = "";
+        String puzzle = "";
+        
+        for (String line : rawLines) {
+            
+            if (line.equals("OBJECT")) {
+                inObject = true;
+                name = description = connectionsStr = itemsStr = puzzle = "";
+                currentTag = null;
+            }
+            else if (line.equals("END_OBJECT")) {
+                
+                ArrayList<String> connections = new ArrayList<>();
+                ArrayList<String> items = new ArrayList<>();
+                
+                if (!connectionsStr.trim().isEmpty()) {
+                    for (String c : connectionsStr.split(",")) {
+                        connections.add(c.trim());
+                    }
+                }
+                
+                if (!itemsStr.trim().isEmpty()) {
+                    for (String i : itemsStr.split(",")) {
+                        items.add(i.trim());
+                    }
+                }
+                
+                Puzzle matchedPuzzle = null;
+                for (Puzzle p : puzzles) {
+                    if (p.getPrompt().equals(puzzle.trim())) {
+                        matchedPuzzle = p;
+                    }
+                }
+                
+                rooms.add(new Room(
+                    name.trim(),
+                    description.trim(),
+                    connections,
+                    items,
+                    null
+                ));
 
-    public boolean isIsFinalRoom() {
-        return isFinalRoom;
-    }
+            inObject = false;
+        }
+        else if (inObject) {
 
-    public boolean isCompleted() {
-        return completed;
-    }
+            if (line.equals("<name>")) currentTag = "name";
+            else if (line.equals("</name>")) currentTag = null;
 
+            else if (line.equals("<description>")) currentTag = "description";
+            else if (line.equals("</description>")) currentTag = null;
 
-    public String getItemRequired() {
-        return itemRequired;
-    }
+            else if (line.equals("<connections>")) currentTag = "connections";
+            else if (line.equals("</connections>")) currentTag = null;
 
-    public String getRoomContent() {
-        return roomContent;
+            else if (line.equals("<items>")) currentTag = "items";
+            else if (line.equals("</items>")) currentTag = null;
+
+            else if (line.equals("<puzzle>")) currentTag = "puzzle";
+            else if (line.equals("</puzzle>")) currentTag = null;
+                
+            else if ("name".equals(currentTag)) name += line + "\n";
+            else if ("description".equals(currentTag)) description += line + "\n";
+            else if ("connections".equals(currentTag)) connectionsStr += line;
+            else if ("items".equals(currentTag)) itemsStr += line;
+            else if ("puzzle".equals(currentTag)) puzzle += line;
+           }
+        }
+        
+        return rooms;
     }
     
-    
+        public static ArrayList<Puzzle> getPuzzles() {
+        
+        ArrayList<Puzzle> puzzles = new ArrayList<>();
+        ArrayList<String> rawLines = getFile(PUZZLE_PATH);
+        
+        boolean inObject = false;
+        String currentTag = null;
+        
+        String prompt = "";
+        String answer = "";
+        
+        for (String line : rawLines) {
+            
+            if (line.equals("OBJECT")) {
+                inObject = true;
+                prompt = answer = "";
+                currentTag = null;
+            }
+            else if (line.equals("END_OBJECT")) {
+                
+                puzzles.add(new Puzzle(
+                    prompt.trim(),
+                    answer.trim()
+                ));
+                
+                inObject = false;
+            }
+            else if (inObject) {
+                
+                if (line.equals("<prompt>")) currentTag = "prompt";
+                else if (line.equals("</prompt>")) currentTag = null;
+                
+                else if (line.equals("<answer>")) currentTag = "answer";
+                else if (line.equals("</answer>")) currentTag = null;
+                
+                else if ("prompt".equals(currentTag)) prompt += line + "\n";
+                else if ("answer".equals(currentTag)) answer += line + "\n";
+            }
+        }
+        
+        return puzzles;
+        
+    }
     
 }
 
-class Puzzle extends Thing{
-    
-    private String puzzleScreen;
-    private String winCondition;
-    private String nextPuzzle;
-    
-    public String showPuzzle(){return puzzleScreen;}
-    public String getNextPuzzle(){return nextPuzzle;}
-    public boolean isWinCondition(String input){return (winCondition.equalsIgnoreCase(input.trim()));}
-    
-    public Puzzle(String pzScreen, String pzWin, String pzNext, String pzName){
-        
-        puzzleScreen = pzScreen;
-        winCondition = pzWin;
-        nextPuzzle = pzNext;
-        
+class Item {
+
+    private final String name;
+    private int count;
+    private String location;
+    private final String description;
+
+    public Item(String name, int count, String location, String description) {
+        this.name = name;
+        this.count = count;
+        this.location = location;
+        this.description = description;
     }
+
+    public String getName() { return name; }
+    public int getCount() { return count; }
+    public String getLocation() { return location; }
+    public String getDescription() { return description; }
+
+    public void setCount(int count) { this.count = count; }
+    public void setLocation(String location) { this.location = location; }
+}
+
+class Room {
+
+    private final String name;
+    private String description;
+    private ArrayList<String> connections;
+    private ArrayList<String> items;
+    private Puzzle puzzle;
+
+    public Room(String name, String description,
+                ArrayList<String> connections,
+                ArrayList<String> items,
+                Puzzle puzzle) {
+        this.name = name;
+        this.description = description;
+        this.connections = connections;
+        this.items = items;
+        this.puzzle = puzzle;
+    }
+
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public ArrayList<String> getConnections() { return connections; }
+    public ArrayList<String> getItems() { return items; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public void addConnection(String room) { if (!connections.contains(room)) connections.add(room); }
+    public void removeConnection(String room) { connections.remove(room); }
+
+    public void addItem(String item) { items.add(item); }
+    public void removeItem(String item) { items.remove(item); }
+
+    public String getPuzzlePrompt() { return puzzle != null ? puzzle.getPrompt() : null; }
+    public boolean isPuzzleSolved() { return puzzle != null && puzzle.isSolved(); }
+    public void tryPuzzleAnswer(String input) { if (puzzle != null) puzzle.tryAnswer(input); }
+
+    public boolean hasPuzzle() { return puzzle != null; }
     
+}
+
+class Puzzle {
+
+    private final String prompt;
+    private final String answer;
+    private boolean solved;
+
+    public Puzzle(String prompt, String answer) {
+        this.prompt = prompt;
+        this.answer = answer;
+        this.solved = false;
+    }
+
+    public String getPrompt() { return prompt; }
+
+    public boolean isSolved() { return solved; }
+
+    public void tryAnswer(String input) {
+        if (!solved && answer.equalsIgnoreCase(input)) {
+            solved = true;
+        }
+    }
 }
