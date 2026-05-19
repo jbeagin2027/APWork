@@ -9,7 +9,11 @@ public class FinalCSProject {
     public final static String ITEM_PATH = "item.txt";
     public final static String ROOM_PATH = "room.txt";
     public final static String PUZZLE_PATH = "puzzle.txt";
-
+    private static ArrayList<Item> gameItems = new ArrayList<>();
+    private static ArrayList<Room> gameRooms = new ArrayList<>();
+    private static ArrayList<Puzzle> gamePuzzles = new ArrayList<>();
+    private static Room currentRoom;
+    private static Room finalRoom;
     
     public static void main(String[] args) {
         
@@ -17,7 +21,17 @@ public class FinalCSProject {
         
     }
     
-    public static ArrayList<String> getFile(String path) {
+    private static ArrayList<Item> getInventory(){
+        ArrayList<Item> inventoryItems = new ArrayList();
+        for(Item i : gameItems){
+            if(i.getLocation().equals("player")){
+                inventoryItems.add(i);
+            }
+        }
+        return inventoryItems;
+    }
+    
+    private static ArrayList<String> getFile(String path) {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             return new ArrayList<>(reader.readAllLines());
         } catch (IOException e) {
@@ -26,7 +40,7 @@ public class FinalCSProject {
         }
     }
     
-    public static ArrayList<Item> getItems() {
+    private static ArrayList<Item> getItems() {
 
         ArrayList<Item> items = new ArrayList<>();
         ArrayList<String> rawLines = getFile(ITEM_PATH);
@@ -41,16 +55,8 @@ public class FinalCSProject {
 
         for (String line : rawLines) {
 
-            if (line.equals("OBJECT")) {
-                inObject = true;
-                name = location = countStr = description = "";
-                currentTag = null;
-            }
-            else if (line.equals("END_OBJECT")) {
-                items.add(new Item(name.trim(),Integer.parseInt(countStr.trim()),location.trim(),description.trim()));
-                inObject = false;
-            }
-            else if (inObject) {
+            
+            if (inObject) {
 
                 if (line.equals("<name>")) currentTag = "name";
                 else if (line.equals("</name>")) currentTag = null;
@@ -68,12 +74,20 @@ public class FinalCSProject {
                 else if ("location".equals(currentTag)) location += line + "\n";
                 else if ("count".equals(currentTag)) countStr += line;
                 else if ("description".equals(currentTag)) description += line + "\n";
+            }else if (line.equals("OBJECT")) {
+                inObject = true;
+                name = location = countStr = description = "";
+                currentTag = null;
+            }
+            else if (line.equals("END_OBJECT")) {
+                items.add(new Item(name.trim(),Integer.parseInt(countStr.trim()),location.trim(),description.trim()));
+                inObject = false;
             }
         }
         return items;
     }
     
-    public static ArrayList<Room> getRooms(ArrayList<Puzzle> puzzles) {
+    private static ArrayList<Room> getRooms(ArrayList<Puzzle> puzzles) {
 
         ArrayList<Room> rooms = new ArrayList<>();
         ArrayList<String> rawLines = getFile(ROOM_PATH);
@@ -89,12 +103,34 @@ public class FinalCSProject {
         
         for (String line : rawLines) {
             
-            if (line.equals("OBJECT")) {
+            
+            if (inObject) {
+
+                if (line.equals("<name>")) currentTag = "name";
+                else if (line.equals("</name>")) currentTag = null;
+
+                else if (line.equals("<description>")) currentTag = "description";
+                else if (line.equals("</description>")) currentTag = null;
+
+                else if (line.equals("<connections>")) currentTag = "connections";
+                else if (line.equals("</connections>")) currentTag = null;
+
+                else if (line.equals("<items>")) currentTag = "items";
+                else if (line.equals("</items>")) currentTag = null;
+
+                else if (line.equals("<puzzle>")) currentTag = "puzzle";
+                else if (line.equals("</puzzle>")) currentTag = null;
+                
+                else if ("name".equals(currentTag)) name += line + "\n";
+                else if ("description".equals(currentTag)) description += line + "\n";
+                else if ("connections".equals(currentTag)) connectionsStr += line;
+                else if ("items".equals(currentTag)) itemsStr += line;
+                else if ("puzzle".equals(currentTag)) puzzle += line;
+            }else if (line.equals("OBJECT")) {
                 inObject = true;
                 name = description = connectionsStr = itemsStr = puzzle = "";
                 currentTag = null;
-            }
-            else if (line.equals("END_OBJECT")) {
+            }else if (line.equals("END_OBJECT")) {
                 
                 ArrayList<String> connections = new ArrayList<>();
                 ArrayList<String> items = new ArrayList<>();
@@ -118,45 +154,16 @@ public class FinalCSProject {
                     }
                 }
                 
-                rooms.add(new Room(
-                    name.trim(),
-                    description.trim(),
-                    connections,
-                    items,
-                    null
-                ));
+                rooms.add(new Room(name.trim(),description.trim(),connections,items,matchedPuzzle));
 
             inObject = false;
-        }
-        else if (inObject) {
-
-            if (line.equals("<name>")) currentTag = "name";
-            else if (line.equals("</name>")) currentTag = null;
-
-            else if (line.equals("<description>")) currentTag = "description";
-            else if (line.equals("</description>")) currentTag = null;
-
-            else if (line.equals("<connections>")) currentTag = "connections";
-            else if (line.equals("</connections>")) currentTag = null;
-
-            else if (line.equals("<items>")) currentTag = "items";
-            else if (line.equals("</items>")) currentTag = null;
-
-            else if (line.equals("<puzzle>")) currentTag = "puzzle";
-            else if (line.equals("</puzzle>")) currentTag = null;
-                
-            else if ("name".equals(currentTag)) name += line + "\n";
-            else if ("description".equals(currentTag)) description += line + "\n";
-            else if ("connections".equals(currentTag)) connectionsStr += line;
-            else if ("items".equals(currentTag)) itemsStr += line;
-            else if ("puzzle".equals(currentTag)) puzzle += line;
-           }
+            }
         }
         
         return rooms;
     }
     
-        public static ArrayList<Puzzle> getPuzzles() {
+    private static ArrayList<Puzzle> getPuzzles() {
         
         ArrayList<Puzzle> puzzles = new ArrayList<>();
         ArrayList<String> rawLines = getFile(PUZZLE_PATH);
@@ -169,21 +176,8 @@ public class FinalCSProject {
         
         for (String line : rawLines) {
             
-            if (line.equals("OBJECT")) {
-                inObject = true;
-                prompt = answer = "";
-                currentTag = null;
-            }
-            else if (line.equals("END_OBJECT")) {
-                
-                puzzles.add(new Puzzle(
-                    prompt.trim(),
-                    answer.trim()
-                ));
-                
-                inObject = false;
-            }
-            else if (inObject) {
+            
+            if (inObject) {
                 
                 if (line.equals("<prompt>")) currentTag = "prompt";
                 else if (line.equals("</prompt>")) currentTag = null;
@@ -193,6 +187,17 @@ public class FinalCSProject {
                 
                 else if ("prompt".equals(currentTag)) prompt += line + "\n";
                 else if ("answer".equals(currentTag)) answer += line + "\n";
+                
+            }else if (line.equals("OBJECT")) {
+                inObject = true;
+                prompt = answer = "";
+                currentTag = null;
+            }else if (line.equals("END_OBJECT")) {
+                puzzles.add(new Puzzle(
+                    prompt.trim(),
+                    answer.trim()
+                ));
+                inObject = false;
             }
         }
         
@@ -223,6 +228,12 @@ class Item {
 
     public void setCount(int count) { this.count = count; }
     public void setLocation(String location) { this.location = location; }
+    
+    @Override
+    public String toString() {
+        return "Item{name='" + name + "', count=" + count + ", location='" + location + "'}";
+    }
+    
 }
 
 class Room {
@@ -263,6 +274,11 @@ class Room {
 
     public boolean hasPuzzle() { return puzzle != null; }
     
+    @Override
+    public String toString() {
+        return "Room{name='" + name + "', connections=" + connections + ", items=" + items + "}";
+    }
+    
 }
 
 class Puzzle {
@@ -286,4 +302,10 @@ class Puzzle {
             solved = true;
         }
     }
+    
+    @Override
+    public String toString() {
+        return "Puzzle{prompt='" + prompt + "', solved=" + solved + "}";
+    }
+    
 }
